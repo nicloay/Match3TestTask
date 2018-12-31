@@ -62,7 +62,11 @@ namespace Logic.Grid
 			result.Commit();
 			return result;
 		}
-		
+
+		public void SetCellValue(Vector2Int position, int value)
+		{
+			Cells[position.x, position.y].SetDice(value);
+		}
 				
 		public void Commit()
 		{
