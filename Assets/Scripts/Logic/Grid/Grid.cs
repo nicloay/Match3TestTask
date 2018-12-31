@@ -1,4 +1,5 @@
 ﻿using Match3.Utils;
+using UnityEditor.Experimental.Build.AssetBundle;
 using UnityEngine;
 using UnityEngine.Assertions;
 
@@ -69,7 +70,7 @@ namespace Logic.Grid
 				
 		public void Commit()
 		{
-			ForEachCell(cell => cell.Commit());
+			ForEachCellId((x,y) => Cells[x,y].Commit());			
 		}
 		
 		private void ClearWholeGrid()

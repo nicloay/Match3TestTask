@@ -17,6 +17,7 @@ namespace Match3.Logic.MatchFinder
             _grid = grid;
             Assert.IsTrue(MinDiceNumberToMatch > 0);
             Assert.IsTrue(MinDiceNumberToMatch <= grid.ColumnNumber || MinDiceNumberToMatch <= grid.RowNumber);
+            Assert.IsTrue(_grid.ColumnNumber > 1 || _grid.RowNumber > 1);
         }
         
         
@@ -29,6 +30,32 @@ namespace Match3.Logic.MatchFinder
                 result[i] = new Match(sequences[i]);
             }            
             return result;
+        }
+
+        public Hint[] GetHints()
+        {
+            
+            List<Hint> result = new List<Hint>();
+            Vector2Int mainOffset = new Vector2Int();
+            Vector2Int spareOffset = new Vector2Int();
+            Vector2Int currentPosition, previousPosition;
+            //iterate over all axis and check for hints
+            for (int mainAxis = 0; mainAxis < 2; mainAxis++)
+            {
+                int spareAxis = Mathf.Abs(mainAxis - 1);                
+                mainOffset[mainAxis] = 1;                
+                spareOffset[spareAxis] = 1;
+                for (int y = 0; y < _grid.Size[mainAxis]; y++)
+                {                                        
+                    for (int previousX = 0, currentX = 1; previousX < _grid.Size[spareAxis]; previousX = currentX++)
+                    {
+                        currentPosition = GetCombinedPosition(mainAxis, y, spareAxis, currentX);
+                        previousPosition = GetCombinedPosition(mainAxis, y, spareAxis, previousX);
+                    }                
+                }
+            }
+
+            return result.ToArray();
         }
 
         public bool ContainsMatchAt(Vector2Int position)

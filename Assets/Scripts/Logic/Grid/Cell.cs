@@ -1,4 +1,5 @@
 ﻿using NUnit.Framework.Constraints;
+using UnityEngine;
 using UnityEngine.Assertions;
 
 namespace Logic.Grid
@@ -26,6 +27,10 @@ namespace Logic.Grid
 
         public void SetDice(int dice)
         {
+            if (IsDirty)
+            {                
+                Debug.LogWarning("you are changin value on dirty cell");
+            }
             SavePreivouValue();
             Assert.IsTrue(dice >= 0);
             DiceType = dice;
