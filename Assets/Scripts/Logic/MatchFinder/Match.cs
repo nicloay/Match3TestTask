@@ -7,9 +7,9 @@ namespace Match3.Logic.MatchFinder
     {
         public readonly Vector2Int[] CellPositions;
 
-        public Match(List<Vector2Int> positions)
+        public Match(Vector2Int[] positions)
         {
-            CellPositions = positions.ToArray();
+            CellPositions = positions;
         }
     }
 }

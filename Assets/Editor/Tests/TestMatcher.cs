@@ -1,5 +1,6 @@
 ﻿using Logic.Grid;
 using Match3.Logic.MatchFinder;
+using Match3.Utils;
 using NUnit.Framework;
 using UnityEngine;
 using Grid = Logic.Grid.Grid;
@@ -175,12 +176,90 @@ namespace Match3.Editor.Tests
                 }
             },
         };
+
+        [Test, TestCaseSource("MatchAtPositionCases")]
+        public void ContainsMatchAtPositionTest(int[,] layout, bool[,] expectedResult)
+        {
+            Grid grid = Grid.CreateWithHumanReadableData(layout);
+
+            bool[,] expectedResultNativeFormat = ArrayUtil.ConvertArrayFromHumanReadebleFormatToNative(expectedResult);
+            LineMatcher lineMatcher = new LineMatcher(grid);
+            for (int y = 0; y < grid.RowNumber; y++)
+            {
+                for (int x = 0; x < grid.ColumnNumber; x++)
+                {
+                    Assert.That(lineMatcher.ContainsMatchAt(new Vector2Int(x,y)), Is.EqualTo(expectedResultNativeFormat[x,y]), string.Format("problem at [{0}:{1}] position", x, y));
+                }
+            }
+        }
+
+        private static object[] MatchAtPositionCases = new object[]
+        {
+            new object[]
+            {
+                new [,]
+                {              
+                    {3},{0},{3},{3},{1}
+                },
+                new [,]
+                {                 
+                    {false}, {false}, {false}, {false},  {false}
+                }
+            },
+            new object[]
+            {
+                new [,]
+                {              
+                    {1},{3},{3},{0},{3}
+                },
+                new [,]
+                {                 
+                    {false}, {false}, {false}, {false},  {false}
+                }
+            },
+            new object[]
+            {
+                new [,]
+                {              
+                    {3,0,3,3,1}
+                },
+                new [,]
+                {                 
+                    {false, false, false, false,  false}
+                }
+            },
+            new object[]
+            {
+                new [,]
+                {              
+                    {1,3,3,0,3}
+                },
+                new [,]
+                {                 
+                    {false, false, false, false,  false}
+                }
+            },
+            new object[]
+            {
+                new [,]
+                {
+                    {1,0,2,0,2},
+                    {0,1,2,1,0},
+                    {1,2,2,2,3},
+                    {0,1,0,1,3},
+                    {1,0,1,0,3}
+                },
+                new [,]
+                {
+                    {false, false,  true, false, false},
+                    {false, false,  true, false, false},
+                    {false,  true,  true,  true,  true},
+                    {false, false, false, false,  true},
+                    {false, false, false, false,  true}
+                }
+            }
+        };
         
-        
-        
-        
-        
-               
         [Test]
         [Repeat(200)]
         public void SingleMatchStressTest()
@@ -217,7 +296,7 @@ namespace Match3.Editor.Tests
             
             for (int i = 0; i < currentMatchLen; i++)
             {                
-                grid.SetCellValue(position, diceType);
+                grid.SetCellDirtyValue(position, diceType);
                 usedPositions[i] = position;
                 position += offset;
             }
@@ -227,7 +306,6 @@ namespace Match3.Editor.Tests
             
             Assert.That(matches.Length, Is.EqualTo(1));
             Assert.That(matches[0].CellPositions, Is.EquivalentTo(usedPositions));
-
         }
     }
 }

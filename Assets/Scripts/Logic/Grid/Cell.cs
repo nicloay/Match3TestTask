@@ -1,25 +1,35 @@
-﻿namespace Logic.Grid
+﻿using NUnit.Framework.Constraints;
+using UnityEngine.Assertions;
+
+namespace Logic.Grid
 {
     public struct Cell
     {
         public bool IsDirty { get; private set; }
         public int DiceType { get; private set; }
-        public bool IsEmpty { get; private set; }
 
+        private int previousValue;
         
-        
+        public bool IsEmpty
+        {
+            get { return DiceType < 0; }
+        }
+
+
+                
         public void Clear()
         {
-            IsDirty = false;
-            DiceType = -1;
-            IsEmpty = true;
+            SavePreivouValue();
+            IsDirty = true;
+            DiceType = -1;            
         }
 
         public void SetDice(int dice)
         {
+            SavePreivouValue();
+            Assert.IsTrue(dice >= 0);
             DiceType = dice;
-            IsDirty = true;
-            IsEmpty = false;
+            IsDirty = true;            
         }
 
         
@@ -28,9 +38,27 @@
         /// </summary>
         public void Commit()
         {
-            IsDirty = false;
-            IsEmpty = DiceType >= 0;
+            IsDirty = false;            
         }
+
+
+        public void RollBackChanges()
+        {
+            if (IsDirty)
+            {
+                DiceType = previousValue;
+                IsDirty = false;
+            }
+        }
+        
+        private void SavePreivouValue()
+        {
+            if (!IsDirty)
+            {
+                previousValue = DiceType;                
+            }
+        }
+        
         
         public bool HasTheSameDiceWith(Cell anotherCell)
         {

@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Match3.Utils;
+using UnityEngine;
 using UnityEngine.Assertions;
 
 namespace Logic.Grid
@@ -47,12 +48,10 @@ namespace Logic.Grid
 		///   
 		/// </summary>
 		/// <param name="diceTypes">Array of dice types</param>
-		public static Grid CreateWithHumanReadableData(int[,] diceTypes) 
+		public static Grid CreateWithHumanReadableData(int[,] diceTypes)
 		{
-			Grid result = new Grid(diceTypes.GetLength(1), diceTypes.GetLength(0));
-			result.ForEachCellId((x, y) => result.Cells[x,y].SetDice(diceTypes[result.RowNumber - y - 1, x]));			
-			result.Commit();
-			return result;
+			int[,] nativeFormat = ArrayUtil.ConvertArrayFromHumanReadebleFormatToNative(diceTypes);
+			return CreateWithData(nativeFormat);
 		}
 
 		public static Grid CreateWithData(int[,] diceTypes)
@@ -63,7 +62,7 @@ namespace Logic.Grid
 			return result;
 		}
 
-		public void SetCellValue(Vector2Int position, int value)
+		public void SetCellDirtyValue(Vector2Int position, int value)
 		{
 			Cells[position.x, position.y].SetDice(value);
 		}
@@ -75,10 +74,27 @@ namespace Logic.Grid
 		
 		private void ClearWholeGrid()
 		{
-			ForEachCell(cell => cell.Clear());			
+			ForEachCell(cell => cell.Clear());	
+			Commit();
 		}
 
-		
+		public void Swap(Vector2Int from, Vector2Int to)
+		{
+			int currentFromDice = Cells[from.x, from.y].DiceType;
+			int currentToDice = Cells[to.x, to.y].DiceType;
+			
+			SetCellDirtyValue(from, currentToDice);
+			SetCellDirtyValue(to, currentFromDice);
+			
+		}
+
+		public void RollBackChanges(params Vector2Int[] positions)
+		{
+			for (int i = 0; i < positions.Length; i++)
+			{
+				Cells[positions[i].x, positions[i].y].RollBackChanges();
+			}
+		}
 
 		public Cell this[int columnId, int rowId]
 		{
@@ -88,6 +104,19 @@ namespace Logic.Grid
 		public Cell this[Vector2Int position]
 		{
 			get { return Cells[position.x, position.y]; }
+		}
+
+		public bool IsCellExists(Vector2Int position)
+		{
+			for (int axis = 0; axis < 2; axis++)
+			{
+				if (position[axis] < 0 || position[axis] >= Size[axis])
+				{
+					return false;
+				}
+			}
+
+			return true;
 		}
 	}
 }

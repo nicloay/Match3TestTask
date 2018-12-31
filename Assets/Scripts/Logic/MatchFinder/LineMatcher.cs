@@ -22,10 +22,63 @@ namespace Match3.Logic.MatchFinder
         
         public Match[] GetMatches()
         {
+            List<Vector2Int[]> sequences = GetSequences(MinDiceNumberToMatch);
+            Match[] result = new Match[sequences.Count];
+            for (int i = 0; i < result.Length; i++)
+            {
+                result[i] = new Match(sequences[i]);
+            }            
+            return result;
+        }
+
+        public bool ContainsMatchAt(Vector2Int position)
+        {
+            // need to scan left then right, and then repeat for another axis
+            Vector2Int offset;
+            int matchLength;
+            for (int axis = 0; axis < 2; axis++)
+            {
+                offset = new Vector2Int();
+                offset[axis] = 1;                
+                matchLength = 1;
+                // scan right
+                for (int i = 1; i < MinDiceNumberToMatch; i++)
+                {
+                    Vector2Int neighbourPosition = position + offset * i;                    
+                    if (!_grid.IsCellExists(neighbourPosition) 
+                        || _grid[neighbourPosition].DiceType != _grid[position].DiceType)
+                    {
+                        break;
+                    }
+                    matchLength++;                    
+                }
+                // scan left
+                for (int i = 1; i < MinDiceNumberToMatch; i++)
+                {
+                    Vector2Int neighbourPosition = position - offset * i;                    
+                    if (!_grid.IsCellExists(neighbourPosition) 
+                        || _grid[neighbourPosition].DiceType != _grid[position].DiceType)
+                    {
+                        break;
+                    }
+                    matchLength++;                    
+                }
+
+                if (matchLength >= MinDiceNumberToMatch)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        private List<Vector2Int[]> GetSequences(int minSequenceLen)
+        {
             Vector2Int current = new Vector2Int();
             Vector2Int previous = new Vector2Int();            
             List<Vector2Int> matchPositions = new List<Vector2Int>();
-            List<Match> result = new List<Match>();
+            List<Vector2Int[]> result = new List<Vector2Int[]>();
             // scan column by column then row by row                        
             for (int mainAxis = 0; mainAxis < 2; mainAxis++)
             {
@@ -45,23 +98,24 @@ namespace Match3.Logic.MatchFinder
                         }
                         else
                         {
-                            if (matchPositions.Count >= MinDiceNumberToMatch)
+                            if (matchPositions.Count >= minSequenceLen)
                             {
-                                result.Add(new Match(matchPositions));
+                                result.Add(matchPositions.ToArray());
                             } 
                             matchPositions.Clear();
                             matchPositions.Add(current);
                         }
                     }
 
-                    if (matchPositions.Count >= MinDiceNumberToMatch)
+                    if (matchPositions.Count >= minSequenceLen)
                     {
-                        result.Add(new Match(matchPositions));
+                        result.Add(matchPositions.ToArray());
                     }
                 }
             }
-            return result.ToArray();
+            return result; 
         }
+        
 
         private static Vector2Int GetCombinedPosition(int axis1, int value1, int axis2, int value2)
         {
@@ -70,5 +124,8 @@ namespace Match3.Logic.MatchFinder
             result[axis2] = value2;
             return result;
         }
+        
+        
+        
     }
 }
