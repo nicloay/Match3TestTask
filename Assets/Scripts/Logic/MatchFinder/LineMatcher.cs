@@ -33,8 +33,7 @@ namespace Match3.Logic.MatchFinder
         }
 
         public Hint[] GetHints()
-        {
-            
+        {            
             List<Hint> result = new List<Hint>();
             Vector2Int mainOffset = new Vector2Int();
             Vector2Int spareOffset = new Vector2Int();
@@ -47,10 +46,20 @@ namespace Match3.Logic.MatchFinder
                 spareOffset[spareAxis] = 1;
                 for (int y = 0; y < _grid.Size[mainAxis]; y++)
                 {                                        
-                    for (int previousX = 0, currentX = 1; previousX < _grid.Size[spareAxis]; previousX = currentX++)
+                    for (int previousX = 0, currentX = 1; currentX < _grid.Size[spareAxis]; previousX = currentX++) //current and previousX just for convenince, on second iteration it will contains Y coordinates
                     {
                         currentPosition = GetCombinedPosition(mainAxis, y, spareAxis, currentX);
                         previousPosition = GetCombinedPosition(mainAxis, y, spareAxis, previousX);
+                        if (_grid[currentPosition].DiceType == _grid[previousPosition].DiceType)
+                        {
+                            continue;
+                        }
+                        _grid.Swap(currentPosition, previousPosition);
+                        if (ContainsMatchAt(currentPosition) || ContainsMatchAt(previousPosition))
+                        {
+                            result.Add(new Hint(previousPosition, currentPosition));
+                        }
+                        _grid.RollBackChanges(currentPosition, previousPosition);
                     }                
                 }
             }

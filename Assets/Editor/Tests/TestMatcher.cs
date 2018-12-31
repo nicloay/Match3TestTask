@@ -259,6 +259,76 @@ namespace Match3.Editor.Tests
                 }
             }
         };
+
+
+        [Test]
+        [TestCaseSource("HintCases")]
+        public void TestHints(int[,] layout, Hint[] expectedHints)
+        {
+            LineMatcher lineMatcher = new LineMatcher(Grid.CreateWithHumanReadableData(layout));
+            Hint[] hints = lineMatcher.GetHints();
+            Assert.That(hints, Is.EquivalentTo(expectedHints));
+        }
+
+        private static object[] HintCases = new object[]
+        {
+            new object[]
+            {
+                new[,]
+                {
+                    {1, 0, 1, 1}
+                },
+                new Hint[]
+                {
+                    new Hint(new Vector2Int(0,0), new Vector2Int(1,0))
+                }
+            },
+            new object[]
+            {
+                new[,]
+                {
+                    {1},
+                    {0},
+                    {1},
+                    {1}
+                },
+                new Hint[]
+                {
+                    new Hint(new Vector2Int(0,2), new Vector2Int(0,3))
+                }
+            },
+            new object[]
+            {
+                new[,]
+                {
+                    {2, 2, 1, 2, 1, 1}
+                },
+                new Hint[]
+                {
+                    new Hint(new Vector2Int(2,0), new Vector2Int(3,0))
+                }
+            },
+            new object[]
+            {
+                new[,]
+                {
+                    {6, 2, 3, 4, 5},
+                    {6, 0, 0, 9, 0},
+                    {1, 2, 1, 1, 5},
+                    {6, 1, 1, 9, 5},                    
+                },
+                new Hint[]
+                {
+                    new Hint(new Vector2Int(0,0), new Vector2Int(0,1)),
+                    new Hint(new Vector2Int(1,0), new Vector2Int(1,1)),                                        
+                    new Hint(new Vector2Int(3,0), new Vector2Int(3,1)),                                        
+                    new Hint(new Vector2Int(4,2), new Vector2Int(4,3)),
+                    new Hint(new Vector2Int(0,1), new Vector2Int(1,1)),
+                    new Hint(new Vector2Int(3,2), new Vector2Int(4,2))                    
+                }
+            },
+            
+        };
         
         [Test]
         [Repeat(200)]
@@ -307,5 +377,8 @@ namespace Match3.Editor.Tests
             Assert.That(matches.Length, Is.EqualTo(1));
             Assert.That(matches[0].CellPositions, Is.EquivalentTo(usedPositions));
         }
+        
+        
+        
     }
 }
