@@ -22,18 +22,19 @@ namespace Match3.Logic
         
         
         public Game(int columnNumber, int rowNumber, int colorNumber)
-        {                                    
-            ColumnNumber = columnNumber;
+        {        
+            ColorNumber = colorNumber;
             if (ColorNumber < 4)
             {
                 throw new LevelDesignProblemException("minimum number of dices must be 4");
             }
+            ColumnNumber = columnNumber;
             RowNumber = rowNumber;
 
             Assert.IsTrue(ColumnNumber > 0 && RowNumber > 0);
             Assert.IsTrue(ColorNumber >= 3 || RowNumber >= 3);
             
-            ColorNumber = colorNumber;            
+                        
             Grid = Grid.CreateWithSize(ColumnNumber, RowNumber);
             _matcher = new LineMatcher(Grid);
             _randomDiceGenerator = new SimpleRandomDiceGenerator(ColorNumber);
@@ -58,6 +59,7 @@ namespace Match3.Logic
             do
             {
                 Grid.SetDiceToCell(cellPosition, _randomDiceGenerator.GetNext());
+                Grid[cellPosition].Commit();
                 if (safeCounter-- <=0)
                 {
                     Debug.LogError("problem with loop here");
