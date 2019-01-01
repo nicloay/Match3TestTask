@@ -1,9 +1,10 @@
 ﻿using System.Collections.Generic;
+using Logic.Actions;
 
 namespace Logic.Physics
 {	
 	public interface IPhysics
 	{
-		List<DiceMovement> Apply(Grid.Grid grid);		
+		List<IDiceAction> Apply(Grid.Grid grid);		
 	}
 }

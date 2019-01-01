@@ -1,4 +1,5 @@
 ﻿using System;
+using Logic.Physics;
 using Logic.RNG;
 using Match3.Logic.MatchFinder;
 using UnityEngine;
@@ -16,7 +17,7 @@ namespace Match3.Logic
 
         public readonly Grid Grid;
         private readonly IMatchFinder _matcher;
-        
+        private readonly Spawner _spawner;
         
         private IRandomDiceGenerator _randomDiceGenerator;
         
@@ -38,7 +39,8 @@ namespace Match3.Logic
             Grid = Grid.CreateWithSize(ColumnNumber, RowNumber);
             _matcher = new LineMatcher(Grid);
             _randomDiceGenerator = new SimpleRandomDiceGenerator(ColorNumber);
-            FillEmptyCells();
+            _spawner = new Spawner(_randomDiceGenerator, _matcher);
+            FillEmptyGrid();
         }
 
         
@@ -47,25 +49,18 @@ namespace Match3.Logic
         /// </summary>
         /// <returns>Number of attempts performed to generate level</returns>
         /// <exception cref="LevelDesignProblemException"></exception>
-        private void FillEmptyCells()
-        {
-            Grid.ForEachEmptyCell(position => FillCellWithUnmatchableDice(position));
-            Grid.Commit();
-        }
-
-        private void FillCellWithUnmatchableDice(Vector2Int cellPosition)
+        private void FillEmptyGrid()
         {
             int safeCounter = 20000;
             do
-            {
-                Grid.SetDiceToCell(cellPosition, _randomDiceGenerator.GetNext());
-                Grid[cellPosition].Commit();
+            {                
                 if (safeCounter-- <=0)
                 {
                     Debug.LogError("problem with loop here");
                     throw new Exception();
                 }
-            } while (_matcher.ContainsMatchAt(cellPosition));
+                _spawner.Apply(Grid);
+            } while (_matcher.GetHints().Length == 0);
         }
     }
 }

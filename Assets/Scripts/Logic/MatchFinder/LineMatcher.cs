@@ -59,7 +59,7 @@ namespace Match3.Logic.MatchFinder
                         {
                             result.Add(new Hint(previousPosition, currentPosition));
                         }
-                        _grid.RollBackChanges(currentPosition, previousPosition);
+                        _grid.Swap(currentPosition, previousPosition); //swap dices back
                     }                
                 }
             }

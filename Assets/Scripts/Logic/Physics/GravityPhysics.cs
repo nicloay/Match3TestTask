@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Logic.Actions;
 using Match3.Utils;
 using UnityEngine;
 
@@ -6,9 +7,9 @@ namespace Logic.Physics
 {
     public class GravityPhysics : IPhysics
     {
-        public List<DiceMovement> Apply(Grid.Grid grid)
+        public List<IDiceAction> Apply(Grid.Grid grid)
         {
-            List<DiceMovement> movements = new List<DiceMovement>();
+            List<IDiceAction> movements = new List<IDiceAction>();
             for (int columnId = 0; columnId < grid.ColumnNumber; columnId++)
             {
                 for (int rowId = 0; rowId < grid.RowNumber; rowId++)

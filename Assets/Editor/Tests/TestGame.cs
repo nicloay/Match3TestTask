@@ -22,12 +22,10 @@ namespace Match3.Editor.Tests
         public void InitialGameContainsDices()
         {
             Game game = new Game(5,5,5);            
-            game.Grid.ForEachCellReadOnly(cell =>
+            game.Grid.ForEachCell(position =>
             {
-                if (cell.IsEmpty)
-                {
-                    Assert.Fail("one of the cell is empty");
-                }                
+                Assert.That(game.Grid[position].IsEmpty, Is.False, string.Format("cell {0} is empty ", position));
+                                                
             });                        
         }
 

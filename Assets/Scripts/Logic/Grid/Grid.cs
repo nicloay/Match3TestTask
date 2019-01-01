@@ -59,15 +59,14 @@ namespace Logic.Grid
 		public static Grid CreateWithData(int[,] diceTypes)
 		{
 			Grid result = new Grid(diceTypes.GetLength(0), diceTypes.GetLength(1));
-			result.ForEachCellId((x, y) => result.Cells[x,y].SetDice(diceTypes[x, y]));			
-			result.Commit();
+			result.ForEachCellId((x, y) => result.Cells[x,y].SetDice(diceTypes[x, y]));						
 			return result;
 		}
 
 		public static Grid CreateWithSize(int columnNumber, int rowNumber)
 		{
 			Grid result = new Grid(columnNumber, rowNumber);
-			result.ClearWholeGridAndCommit();
+			result.ClearWholeGrid();
 			return result;
 		}
 		
@@ -75,17 +74,13 @@ namespace Logic.Grid
 		{
 			Cells[position.x, position.y].SetDice(value);
 		}
-				
-		public void Commit()
-		{
-			ForEachCellId((x, y) => Cells[x, y].Commit());
-		}
+		
 				
 		
-		public void ClearWholeGridAndCommit()
+		public void ClearWholeGrid()
 		{
 			ForEachCell((x, y) => Cells[x, y].Clear());
-			Commit();
+			
 		}
 
 		public void Swap(Vector2Int from, Vector2Int to)
@@ -106,13 +101,6 @@ namespace Logic.Grid
 			}
 		}
 		
-		public void RollBackChanges(params Vector2Int[] positions)
-		{
-			for (int i = 0; i < positions.Length; i++)
-			{
-				Cells[positions[i].x, positions[i].y].RollBackChanges();
-			}
-		}
 
 		public Cell this[int columnId, int rowId]
 		{

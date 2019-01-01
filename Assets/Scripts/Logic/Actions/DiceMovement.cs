@@ -1,8 +1,9 @@
-﻿using UnityEngine;
+﻿using Logic.Actions;
+using UnityEngine;
 
 namespace Logic.Physics
 {
-    public struct DiceMovement
+    public struct DiceMovement : IDiceAction
     {        
         public Vector2Int Source;
         public Vector2Int Destination;
