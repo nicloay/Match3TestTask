@@ -1,4 +1,5 @@
-﻿using Match3.Utils;
+﻿using Logic.RNG;
+using Match3.Utils;
 using UnityEditor.Experimental.Build.AssetBundle;
 using UnityEngine;
 using UnityEngine.Assertions;
@@ -19,12 +20,12 @@ namespace Logic.Grid
 
 		private readonly Cell[,] Cells;
 		
-		public Grid(int columnNumber, int rowNumber)
+		private Grid(int columnNumber, int rowNumber)
 		{
 			Assert.IsTrue(columnNumber > 0);
 			Assert.IsTrue(rowNumber > 0);
 			Size = new Vector2Int(columnNumber, rowNumber);						
-			Cells = new Cell[columnNumber, rowNumber];
+			Cells = new Cell[columnNumber, rowNumber];						
 		}
 
 		
@@ -63,6 +64,13 @@ namespace Logic.Grid
 			return result;
 		}
 
+		public static Grid CreateWithSize(int columnNumber, int rowNumber)
+		{
+			Grid result = new Grid(columnNumber, rowNumber);
+			result.ClearWholeGridAndCommit();
+			return result;
+		}
+		
 		public void SetCellDirtyValue(Vector2Int position, int value)
 		{
 			Cells[position.x, position.y].SetDice(value);
@@ -70,12 +78,12 @@ namespace Logic.Grid
 				
 		public void Commit()
 		{
-			ForEachCellId((x,y) => Cells[x,y].Commit());			
+			ForEachCellId((x, y) => Cells[x, y].Commit());
 		}
 		
-		private void ClearWholeGrid()
+		public void ClearWholeGridAndCommit()
 		{
-			ForEachCell(cell => cell.Clear());	
+			ForEachCell((x, y) => Cells[x, y].Clear());
 			Commit();
 		}
 
@@ -107,6 +115,12 @@ namespace Logic.Grid
 			get { return Cells[position.x, position.y]; }
 		}
 
+
+		public void FillEmptyCellsWithDices(IRandomDiceGenerator generator)
+		{
+			ForEachEmptyCell((x,y) => Cells[x, y].SetDice(generator.GetNext()));
+		}
+		
 		public bool IsCellExists(Vector2Int position)
 		{
 			for (int axis = 0; axis < 2; axis++)

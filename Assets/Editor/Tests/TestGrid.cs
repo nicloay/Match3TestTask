@@ -1,4 +1,5 @@
-﻿using JetBrains.Annotations;
+﻿using System.Net.Configuration;
+using JetBrains.Annotations;
 using NUnit.Framework;
 using UnityEngine;
 using Grid = Logic.Grid.Grid;
@@ -8,6 +9,22 @@ namespace Match3.Editor.Tests
     [TestFixture]
     public class TestGrid
     {
+
+        [Test]
+        public void TestDefaultGridContainsEmptyCells()
+        {
+            Grid grid = Grid.CreateWithSize(5,5);
+            
+            grid.ForEachCellReadOnly(cell =>
+            {
+                if (!cell.IsEmpty)
+                {                
+                    Assert.Fail("Error, empty grid contains non empty cells");
+                }
+            });
+            
+
+        }
         
         [Test]
         public void TestConstructorWithDicesSquare()
@@ -88,7 +105,7 @@ namespace Match3.Editor.Tests
                 {1,2},
                 {3,4}               
             });
-            grid.ForEachCell(cell => Assert.That(cell.IsDirty, Is.False));
+            grid.ForEachCell((x, y) =>Assert.That(grid[x,y].IsDirty, Is.False) );            
         }        
         
         [Test]
