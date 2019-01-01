@@ -122,6 +122,28 @@ namespace Match3.Editor.Tests
             Assert.That(grid[0,1].DiceType, Is.EqualTo(1));
         }
         
-        
+     
+        [Test]
+        public void ClearTest()
+        {
+            Grid grid = Grid.CreateWithHumanReadableData(new int[,]
+            {
+                {1, 2, 3},
+                {4, 5, 6},
+                {7, 8, 9}
+            });
+            grid.ClearCells(new Vector2Int(0,0), new Vector2Int(1,1), new Vector2Int(2,2));
+            Assert.That(grid[Vector2Int.zero].IsEmpty, Is.True);
+            Assert.That(grid[Vector2Int.one].IsEmpty, Is.True);
+            Assert.That(grid[Vector2Int.one * 2].IsEmpty, Is.True);
+            
+            Assert.That(grid[0,2].DiceType == 1);
+            Assert.That(grid[2,0].DiceType == 9);
+            
+            Assert.That(grid[Vector2Int.zero].IsDirty, Is.True);
+            grid.Commit();
+            Assert.That(grid[Vector2Int.zero].IsDirty, Is.False);
+            
+        }
     }
 }

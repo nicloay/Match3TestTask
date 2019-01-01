@@ -1,6 +1,8 @@
-﻿using Logic.RNG;
+﻿using System;
+using Logic.RNG;
 using Match3.Logic.MatchFinder;
 using UnityEngine;
+using UnityEngine.Assertions;
 using Grid = Logic.Grid.Grid;
 
 namespace Match3.Logic
@@ -12,8 +14,6 @@ namespace Match3.Logic
         public readonly int RowNumber;
         public readonly int ColorNumber;
 
-
-        public readonly int InitialNumberOfAttemptToFillGrid;
         public readonly Grid Grid;
         private readonly IMatchFinder _matcher;
         
@@ -22,14 +22,22 @@ namespace Match3.Logic
         
         
         public Game(int columnNumber, int rowNumber, int colorNumber)
-        {                        
+        {                                    
             ColumnNumber = columnNumber;
+            if (ColorNumber < 4)
+            {
+                throw new LevelDesignProblemException("minimum number of dices must be 4");
+            }
             RowNumber = rowNumber;
+
+            Assert.IsTrue(ColumnNumber > 0 && RowNumber > 0);
+            Assert.IsTrue(ColorNumber >= 3 || RowNumber >= 3);
+            
             ColorNumber = colorNumber;            
             Grid = Grid.CreateWithSize(ColumnNumber, RowNumber);
             _matcher = new LineMatcher(Grid);
             _randomDiceGenerator = new SimpleRandomDiceGenerator(ColorNumber);
-            InitialNumberOfAttemptToFillGrid = FillEmptyCells();
+            FillEmptyCells();
         }
 
         
@@ -38,21 +46,24 @@ namespace Match3.Logic
         /// </summary>
         /// <returns>Number of attempts performed to generate level</returns>
         /// <exception cref="LevelDesignProblemException"></exception>
-        private int FillEmptyCells()
+        private void FillEmptyCells()
         {
-            int attemp = 0;
+            Grid.ForEachEmptyCell(position => FillCellWithUnmatchableDice(position));
+            Grid.Commit();
+        }
+
+        private void FillCellWithUnmatchableDice(Vector2Int cellPosition)
+        {
+            int safeCounter = 20000;
             do
             {
-                Grid.ClearWholeGridAndCommit();
-                if (++attemp > InitialSpawnAttemptNumber)
+                Grid.SetDiceToCell(cellPosition, _randomDiceGenerator.GetNext());
+                if (safeCounter-- <=0)
                 {
-                    throw new LevelDesignProblemException(string.Format(
-                        "Performed {0} attempts to generate level with no luck. Try to increase number of dices, change board size or use different RNG",
-                        attemp));
+                    Debug.LogError("problem with loop here");
+                    throw new Exception();
                 }
-                Grid.FillEmptyCellsWithDices(_randomDiceGenerator);                
-            } while (_matcher.GetMatches().Length > 0 || _matcher.GetHints().Length == 0);
-            return attemp;
+            } while (_matcher.ContainsMatchAt(cellPosition));
         }
     }
 }

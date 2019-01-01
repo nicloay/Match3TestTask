@@ -80,6 +80,7 @@ namespace Logic.Grid
 		{
 			ForEachCellId((x, y) => Cells[x, y].Commit());
 		}
+				
 		
 		public void ClearWholeGridAndCommit()
 		{
@@ -97,6 +98,14 @@ namespace Logic.Grid
 			
 		}
 
+		public void ClearCells(params Vector2Int[] positions)
+		{
+			for (int i = 0; i < positions.Length; i++)
+			{
+				Cells[positions[i].x, positions[i].y].Clear();
+			}
+		}
+		
 		public void RollBackChanges(params Vector2Int[] positions)
 		{
 			for (int i = 0; i < positions.Length; i++)
@@ -120,6 +129,11 @@ namespace Logic.Grid
 		{
 			ForEachEmptyCell((x,y) => Cells[x, y].SetDice(generator.GetNext()));
 		}
+
+		public void SetDiceToCell(Vector2Int position, int diceType)
+		{
+			Cells[position.x, position.y].SetDice(diceType);
+		}
 		
 		public bool IsCellExists(Vector2Int position)
 		{
@@ -133,5 +147,6 @@ namespace Logic.Grid
 
 			return true;
 		}
+		
 	}
 }

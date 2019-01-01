@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Runtime.Remoting;
 using Match3.Utils;
+using NUnit.Framework;
 
 namespace Logic.RNG
 {
@@ -14,6 +16,7 @@ namespace Logic.RNG
         
         public SimpleRandomDiceGenerator(int colorNumber)
         {        
+            Assert.IsTrue(colorNumber > 1);
             _random = new Random();
             _shuffledStack = ArrayUtil.GenerateSequencedArray(colorNumber, ShuffleStackNumber);            
         }
