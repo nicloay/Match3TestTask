@@ -161,7 +161,5 @@ namespace Match3.Logic.MatchFinder
             return result;
         }
         
-        
-        
     }
 }

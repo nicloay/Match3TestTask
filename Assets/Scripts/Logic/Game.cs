@@ -53,12 +53,13 @@ namespace Match3.Logic
         {
             int safeCounter = 20000;
             do
-            {                
+            {    
+                Grid.ClearWholeGrid();
                 if (safeCounter-- <=0)
                 {
                     Debug.LogError("problem with loop here");
                     throw new Exception();
-                }
+                }                
                 _spawner.Apply(Grid);
             } while (_matcher.GetHints().Length == 0);
         }

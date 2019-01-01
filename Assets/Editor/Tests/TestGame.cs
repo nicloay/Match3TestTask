@@ -13,7 +13,7 @@ namespace Match3.Editor.Tests
         {
             int columnNumber = Random.Range(5, 16);
             int rowNumber = Random.Range(5, 16);
-            int colorNumber = Random.Range(3, 8);
+            int colorNumber = Random.Range(4, 8);
             Game game = new Game(columnNumber, rowNumber, colorNumber);  
             Assert.Pass();
         }
