@@ -32,7 +32,7 @@ namespace Logic.Grid
                 Debug.LogWarning("you are changin value on dirty cell");
             }
             SavePreivouValue();
-            Assert.IsTrue(dice >= 0);
+            Assert.IsTrue(dice >= 0 || dice == -1);
             DiceType = dice;
             IsDirty = true;            
         }
