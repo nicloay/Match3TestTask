@@ -57,9 +57,14 @@ namespace GameView
 		void Awake()
 		{
 			_game = new Game(_size, _diceNumber);	
-			_grid.Initialize(_game.Grid.Size);			
-			
-			
+			_grid.Initialize(_game.Grid.Size);									
+		}
+
+		IEnumerator Start()
+		{
+			yield return new WaitForSeconds(0.2f);
+			var spawnActions = _game.FillEmptyGrid();
+			_grid.HandleSpawns(spawnActions);
 		}
 		
 	}

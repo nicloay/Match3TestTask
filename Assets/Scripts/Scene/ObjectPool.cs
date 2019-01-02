@@ -34,6 +34,7 @@ namespace Scene
         public void Release(T instance)
         {
             instance.gameObject.SetActive(false);
+            instance.transform.parent = transform;
             _pool.Push(instance);
         }
 

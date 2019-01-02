@@ -113,67 +113,16 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
---- !u!1 &33652821
+--- !u!1 &105541174
 GameObject:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   serializedVersion: 5
   m_Component:
-  - component: {fileID: 33652822}
-  - component: {fileID: 33652823}
-  m_Layer: 0
-  m_Name: Grid
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &33652822
-Transform:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 33652821}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 1505638755}
-  m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &33652823
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 33652821}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 14d25729b7455428095d05b351444abf, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  OnGridSizeChanged:
-    m_PersistentCalls:
-      m_Calls: []
-    m_TypeName: Match3.Scene.GridController+GridSizeChangeEvent, Assembly-CSharp,
-      Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-  _dicePool: {fileID: 0}
-  _bgTileOffset: {x: 2.7, y: 2.7}
-  _fieldPrefab: {fileID: 1992228165012180, guid: 738c997ecaac3468992f94845ec553b2,
-    type: 2}
-  _dicePrefab: {fileID: 0}
-  _diceParent: {fileID: 0}
---- !u!1 &1052822408
-GameObject:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  serializedVersion: 5
-  m_Component:
-  - component: {fileID: 1052822412}
-  - component: {fileID: 1052822411}
-  - component: {fileID: 1052822409}
+  - component: {fileID: 105541178}
+  - component: {fileID: 105541177}
+  - component: {fileID: 105541175}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -181,23 +130,23 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1052822409
+--- !u!114 &105541175
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1052822408}
+  m_GameObject: {fileID: 105541174}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 719312f974eb345989004c471e7bf075, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!20 &1052822411
+--- !u!20 &105541177
 Camera:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1052822408}
+  m_GameObject: {fileID: 105541174}
   m_Enabled: 1
   serializedVersion: 2
   m_ClearFlags: 1
@@ -228,12 +177,12 @@ Camera:
   m_OcclusionCulling: 0
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
---- !u!4 &1052822412
+--- !u!4 &105541178
 Transform:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1052822408}
+  m_GameObject: {fileID: 105541174}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
@@ -241,15 +190,57 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1505638754
+--- !u!1 &371245785
 GameObject:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   serializedVersion: 5
   m_Component:
-  - component: {fileID: 1505638755}
-  - component: {fileID: 1505638756}
+  - component: {fileID: 371245787}
+  - component: {fileID: 371245786}
+  m_Layer: 0
+  m_Name: DicePool
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &371245786
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 371245785}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d7a9add5bac64490bdbc7d0321ac6648, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _prefab: {fileID: 1654480399509910, guid: ac327ef2549994f5bb4cb83ed8f04f1a, type: 2}
+--- !u!4 &371245787
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 371245785}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1867099712
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 1867099715}
+  - component: {fileID: 1867099714}
+  - component: {fileID: 1867099713}
   m_Layer: 0
   m_Name: Game
   m_TagString: Untagged
@@ -257,26 +248,34 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &1505638755
-Transform:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1505638754}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children:
-  - {fileID: 33652822}
-  m_Father: {fileID: 0}
-  m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1505638756
+--- !u!114 &1867099713
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1505638754}
+  m_GameObject: {fileID: 1867099712}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 14d25729b7455428095d05b351444abf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  OnGridSizeChanged:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: Match3.Scene.GridController+GridSizeChangeEvent, Assembly-CSharp,
+      Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+  _dicePool: {fileID: 371245786}
+  _bgTileOffset: {x: 2.7, y: 2.7}
+  _fieldPrefab: {fileID: 1992228165012180, guid: 738c997ecaac3468992f94845ec553b2,
+    type: 2}
+  _timePerCellTimeGravity: 0.2
+  _gravityEaseType: 38
+--- !u!114 &1867099714
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1867099712}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0b7d2231dd91d4f49949a67f71979323, type: 3}
@@ -293,6 +292,19 @@ MonoBehaviour:
         m_Calls: []
       m_TypeName: GameView.GameOverEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
         PublicKeyToken=null
-  _diceNumber: 5
-  _grid: {fileID: 33652823}
-  _size: {x: 6, y: 5}
+  _diceNumber: 15
+  _grid: {fileID: 1867099713}
+  _size: {x: 5, y: 5}
+--- !u!4 &1867099715
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1867099712}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

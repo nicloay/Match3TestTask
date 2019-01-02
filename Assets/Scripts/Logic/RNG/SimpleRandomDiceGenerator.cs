@@ -18,7 +18,8 @@ namespace Logic.RNG
         {        
             Assert.IsTrue(colorNumber > 1);
             _random = new Random();
-            _shuffledStack = ArrayUtil.GenerateSequencedArray(colorNumber, ShuffleStackNumber);            
+            _shuffledStack = ArrayUtil.GenerateSequencedArray(colorNumber, ShuffleStackNumber); 
+            ShuffleStack();
         }
 
 
