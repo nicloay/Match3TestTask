@@ -8,13 +8,11 @@ using UnityEngine;
 using UnityEngine.Events;
 
 namespace Match3.Scene
-{
-	
-	
-	
-	
+{	
 	public class GridController : MonoBehaviour
-	{		
+	{
+		public UserSwapFieldsEvent OnUserSwapFields;
+		
 		[Serializable]
 		public class GridSizeChangeEvent : UnityEvent<Vector2>{}
 
@@ -29,6 +27,11 @@ namespace Match3.Scene
 		[SerializeField] private float _timePerCellTimeGravity;
 
 		[SerializeField] private EaseType _gravityEaseType;
+		
+		[SerializeField] private float _wrongMoveDuration;
+		
+		[SerializeField] private EaseType _wrongMoveEaseType;
+		
 		
 		private FieldController[,] _fields;
 		private Vector2Int _boardSize;
@@ -69,7 +72,8 @@ namespace Match3.Scene
 					instance.transform.localPosition = position;
 					position.x += _bgTileOffset.x;
 					_fields[colId, rowId] = instance.GetComponent<FieldController>();
-					_fields[colId, rowId].Initialize(new Vector2Int(rowId, colId));
+					_fields[colId, rowId].Initialize(new Vector2Int(colId, rowId));					
+					_fields[colId, rowId].OnUserSwapFields.AddListener(OnUserSwapFields.Invoke);
 				}
 
 				position.y += _bgTileOffset.y;
@@ -164,10 +168,35 @@ namespace Match3.Scene
 								
 				yield return null;
 				time += Time.deltaTime;
-			}
-											
+			}											
 		}
 
+		public void ShwoWrongMove(Vector2Int from, Vector2Int to)
+		{
+			StartCoroutine(DoShwoWrongMove(from, to));
+		}
+
+		private IEnumerator DoShwoWrongMove(Vector2Int from, Vector2Int to)
+		{
+			FieldController fieldFrom = _fields[from.x, from.y];
+			FieldController fieldTo = _fields[to.x, to.y];
+			
+			Vector2 diff = fieldFrom.transform.position - fieldTo.transform.position;
+
+			float time = 0.0f;
+			do
+			{
+				time += Time.deltaTime;
+				time = Mathf.Min(time, _wrongMoveDuration);
+				Vector3 offset =
+					Equations.ChangeVector3PingPong(time, Vector3.zero, diff, _wrongMoveDuration, _wrongMoveEaseType);
+				fieldFrom.Dice.transform.localPosition = -offset;
+				fieldTo.Dice.transform.localPosition =  offset;
+				yield return null;
+			} while (time < _wrongMoveDuration);
+
+		}
+		
 		struct OffsetWithTime
 		{
 			public float Offset;

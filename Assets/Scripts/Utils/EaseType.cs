@@ -802,5 +802,27 @@ namespace Match3.Utils
 			float z = methods[(int) easeType](time, startValue.z, change.z, duration);
 			return new Vector3(x, y, z);
 		}
+		
+		
+		public static float ChangeFloatPingPong(float time, float startValue, float change, float duration, EaseType easeType)
+		{
+			time = Mathf.Repeat(time, duration);			
+			if (time > duration / 2.0f)
+			{			
+				time = duration - time;
+			}	 		
+			return methods[(int) easeType](time, startValue, change, duration / 2.0f);
+		}
+		
+				
+		public static Vector3 ChangeVector3PingPong(float time, Vector3 startValue, Vector3 change, float duration, EaseType easeType)
+		{			
+			return new Vector3()
+			{
+				x = ChangeFloatPingPong(time, startValue.x, change.x, duration, easeType),
+				y = ChangeFloatPingPong(time, startValue.y, change.y, duration, easeType),
+				z = ChangeFloatPingPong(time, startValue.z, change.z, duration, easeType) 
+			};
+		}
 	}
 }

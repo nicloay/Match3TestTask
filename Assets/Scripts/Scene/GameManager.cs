@@ -57,7 +57,20 @@ namespace GameView
 		void Awake()
 		{
 			_game = new Game(_size, _diceNumber);	
-			_grid.Initialize(_game.Grid.Size);									
+			_grid.Initialize(_game.Grid.Size);	
+			_grid.OnUserSwapFields.AddListener(TryToMakeSwap);
+		}
+
+		private void TryToMakeSwap(Vector2Int arg0, Vector2Int arg1)
+		{
+			if (_game.IsMovePossible(arg0, arg1))
+			{
+				//make move
+			}
+			else
+			{
+				_grid.ShwoWrongMove(arg0, arg1);
+			}
 		}
 
 		IEnumerator Start()
