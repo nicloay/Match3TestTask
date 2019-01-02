@@ -112,7 +112,6 @@ namespace Match3.Scene
 			{
 				int cellDicstance = _boardSize.y - keyValuePair.Value;
 
-
 				OffsetWithTime value = new OffsetWithTime()
 				{
 					Offset = cellDicstance * _bgTileOffset.y,
@@ -126,11 +125,11 @@ namespace Match3.Scene
 			HashSet<SpawnDiceAction> _fieldsInAction  = new HashSet<SpawnDiceAction>();
 			foreach (var spawnAction in actions)
 			{
-				int x = spawnAction.Destination.x;
-				int y = spawnAction.Destination.y;
+				int columnId = spawnAction.Destination.x;
+				int rowId = spawnAction.Destination.y;
 				DiceController dice = _dicePool.Get();
 				dice.SetDice(spawnAction.DiceId);
-				_fields[x,y].SetDice(dice, yOffsetByColumn[x].Offset);
+				_fields[columnId,rowId].SetDice(dice, yOffsetByColumn[columnId].Offset);
 				_fieldsInAction.Add(spawnAction);
 			}
 						
@@ -142,10 +141,10 @@ namespace Match3.Scene
 				actionToRemove.Clear();
 				foreach (var action in actions)
 				{
-					int x = action.Destination.x;
-					int y = action.Destination.y;
+					int columnId = action.Destination.x;
+					int rowId = action.Destination.y;
 
-					OffsetWithTime offsetWithTime = yOffsetByColumn[y];
+					OffsetWithTime offsetWithTime = yOffsetByColumn[columnId];
 
 					float easeTime = time;
 					if (time > offsetWithTime.Duration)
@@ -157,7 +156,7 @@ namespace Match3.Scene
 					float yOffset = Equations.ChangeFloat(easeTime, offsetWithTime.Offset, -offsetWithTime.Offset,
 						offsetWithTime.Duration, _gravityEaseType);
 					
-					_fields[x,y].SetDiceOffset(yOffset);
+					_fields[columnId,rowId].SetDiceOffset(yOffset);
 				}
 
 

@@ -379,7 +379,7 @@ MonoBehaviour:
         PublicKeyToken=null
   _diceNumber: 15
   _grid: {fileID: 1867099713}
-  _size: {x: 5, y: 5}
+  _size: {x: 10, y: 15}
 --- !u!4 &1867099715
 Transform:
   m_ObjectHideFlags: 0
