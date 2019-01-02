@@ -14,14 +14,16 @@ namespace Match3.Editor.Tests
             int columnNumber = Random.Range(5, 16);
             int rowNumber = Random.Range(5, 16);
             int colorNumber = Random.Range(4, 8);
-            Game game = new Game(columnNumber, rowNumber, colorNumber);  
+            Game game = new Game(columnNumber, rowNumber, colorNumber);
+            game.FillEmptyGrid();
             Assert.Pass();
         }
 
         [Test]
         public void InitialGameContainsDices()
         {
-            Game game = new Game(5,5,5);            
+            Game game = new Game(5,5,5);
+            game.FillEmptyGrid();
             game.Grid.ForEachCell(position =>
             {
                 Assert.That(game.Grid[position].IsEmpty, Is.False, string.Format("cell {0} is empty ", position));
@@ -33,7 +35,10 @@ namespace Match3.Editor.Tests
         
         public void ThrowLevelDesignExceptionBecauseOfColors()
         {            
-            Assert.That(() => new Game(5,5,1), Throws.TypeOf<LevelDesignProblemException>());    
+            Assert.That(() =>
+            {                
+                return new Game(5, 5, 1).FillEmptyGrid();                
+            }, Throws.TypeOf<LevelDesignProblemException>());    
         }
     }
 }

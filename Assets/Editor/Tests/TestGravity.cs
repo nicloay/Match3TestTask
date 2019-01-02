@@ -18,7 +18,7 @@ namespace Match3.Editor.Tests
             Grid expectedGrid = Grid.CreateWithHumanReadableData(expectedLayout);
 
             sourceGrid.ForEachCell(position =>
-                Assert.That(sourceGrid[position].DiceType, Is.EqualTo(expectedGrid[position].DiceType),
+                Assert.That(sourceGrid[position].DiceId, Is.EqualTo(expectedGrid[position].DiceId),
                     string.Format("problem at {0}", position)));
         }
 

@@ -7,11 +7,11 @@ namespace Logic.Grid
     public struct Cell
     {
         
-        public int DiceType { get; private set; }
+        public int DiceId { get; private set; }
         
         public bool IsEmpty
         {
-            get { return DiceType < 0; }
+            get { return DiceId < 0; }
         }
                 
         public void Clear()
@@ -22,7 +22,7 @@ namespace Logic.Grid
         public void SetDice(int dice)
         {    
             Assert.IsTrue(dice >= 0 || dice == -1);
-            DiceType = dice;                     
+            DiceId = dice;                     
         }                
         
         public bool HasTheSameDiceWith(Cell anotherCell)
@@ -31,7 +31,7 @@ namespace Logic.Grid
             {
                 return false;
             }
-            return DiceType == anotherCell.DiceType;
+            return DiceId == anotherCell.DiceId;
         }
     }
 }

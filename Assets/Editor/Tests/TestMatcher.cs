@@ -341,12 +341,12 @@ namespace Match3.Editor.Tests
 
             
             int[,] layout = new int[boardWidth, boardHeight];
-            int diceType = 0;
+            int diceId = 0;
             for (int y = 0; y < boardHeight; y++)
             {
                 for (int x = 0; x < boardWidth; x++)
                 {
-                    layout[x, y] = diceType++;
+                    layout[x, y] = diceId++;
                 }
             }
             
@@ -366,7 +366,7 @@ namespace Match3.Editor.Tests
             
             for (int i = 0; i < currentMatchLen; i++)
             {                
-                grid.SetCellDirtyValue(position, diceType);
+                grid.SetCellDirtyValue(position, diceId);
                 usedPositions[i] = position;
                 position += offset;
             }

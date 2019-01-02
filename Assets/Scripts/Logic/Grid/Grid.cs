@@ -33,7 +33,7 @@ namespace Logic.Grid
 		/// Initialize Grid with dices content.
 		///
 		///    WARNING:
-		///     1. diceTypes has inverted x and y indexes
+		///     1. diceIds has inverted x and y indexes
 		///			e.g. dice[2,5] means columnId = 2, rowId = 5
 		///     2. y axis starts from the top dice[0, 0]  means
 		///			that you will assign value for the TOP LEFT corner of the grid 
@@ -49,17 +49,17 @@ namespace Logic.Grid
 		/// 		Cell[2,1] = 3
 		///   
 		/// </summary>
-		/// <param name="diceTypes">Array of dice types</param>
-		public static Grid CreateWithHumanReadableData(int[,] diceTypes)
+		/// <param name="diceIds">Array of dice ids</param>
+		public static Grid CreateWithHumanReadableData(int[,] diceIds)
 		{
-			int[,] nativeFormat = ArrayUtil.ConvertArrayFromHumanReadebleFormatToNative(diceTypes);
+			int[,] nativeFormat = ArrayUtil.ConvertArrayFromHumanReadebleFormatToNative(diceIds);
 			return CreateWithData(nativeFormat);
 		}
 
-		public static Grid CreateWithData(int[,] diceTypes)
+		public static Grid CreateWithData(int[,] diceIds)
 		{
-			Grid result = new Grid(diceTypes.GetLength(0), diceTypes.GetLength(1));
-			result.ForEachCellId((x, y) => result.Cells[x,y].SetDice(diceTypes[x, y]));						
+			Grid result = new Grid(diceIds.GetLength(0), diceIds.GetLength(1));
+			result.ForEachCellId((x, y) => result.Cells[x,y].SetDice(diceIds[x, y]));						
 			return result;
 		}
 
@@ -85,8 +85,8 @@ namespace Logic.Grid
 
 		public void Swap(Vector2Int from, Vector2Int to)
 		{
-			int currentFromDice = Cells[from.x, from.y].DiceType;
-			int currentToDice = Cells[to.x, to.y].DiceType;
+			int currentFromDice = Cells[from.x, from.y].DiceId;
+			int currentToDice = Cells[to.x, to.y].DiceId;
 			
 			SetCellDirtyValue(from, currentToDice);
 			SetCellDirtyValue(to, currentFromDice);
@@ -118,9 +118,9 @@ namespace Logic.Grid
 			ForEachEmptyCell((x,y) => Cells[x, y].SetDice(generator.GetNext()));
 		}
 
-		public void SetDiceToCell(Vector2Int position, int diceType)
+		public void SetDiceToCell(Vector2Int position, int diceId)
 		{
-			Cells[position.x, position.y].SetDice(diceType);
+			Cells[position.x, position.y].SetDice(diceId);
 		}
 		
 		public bool IsCellExists(Vector2Int position)

@@ -35,11 +35,11 @@ namespace Match3.Editor.Tests
                 {4,5,6},
                 {7,8,9}
             });
-            Assert.That(grid[0,0].DiceType, Is.EqualTo(7));
-            Assert.That(grid[0,2].DiceType, Is.EqualTo(1));
-            Assert.That(grid[1,1].DiceType, Is.EqualTo(5));
-            Assert.That(grid[2,0].DiceType, Is.EqualTo(9));
-            Assert.That(grid[2,2].DiceType, Is.EqualTo(3));                        
+            Assert.That(grid[0,0].DiceId, Is.EqualTo(7));
+            Assert.That(grid[0,2].DiceId, Is.EqualTo(1));
+            Assert.That(grid[1,1].DiceId, Is.EqualTo(5));
+            Assert.That(grid[2,0].DiceId, Is.EqualTo(9));
+            Assert.That(grid[2,2].DiceId, Is.EqualTo(3));                        
         }
         
         [Test]
@@ -50,10 +50,10 @@ namespace Match3.Editor.Tests
                 {1,2,3},
                 {4,5,6}                
             });
-            Assert.That(grid[0,0].DiceType, Is.EqualTo(4));
-            Assert.That(grid[0,1].DiceType, Is.EqualTo(1));            
-            Assert.That(grid[2,0].DiceType, Is.EqualTo(6));
-            Assert.That(grid[2,1].DiceType, Is.EqualTo(3));                        
+            Assert.That(grid[0,0].DiceId, Is.EqualTo(4));
+            Assert.That(grid[0,1].DiceId, Is.EqualTo(1));            
+            Assert.That(grid[2,0].DiceId, Is.EqualTo(6));
+            Assert.That(grid[2,1].DiceId, Is.EqualTo(3));                        
         }
         
         [Test]
@@ -65,10 +65,10 @@ namespace Match3.Editor.Tests
                 {3,4},
                 {5,6}
             });
-            Assert.That(grid[0,0].DiceType, Is.EqualTo(5));
-            Assert.That(grid[0,2].DiceType, Is.EqualTo(1));            
-            Assert.That(grid[1,0].DiceType, Is.EqualTo(6));
-            Assert.That(grid[1,2].DiceType, Is.EqualTo(2));                        
+            Assert.That(grid[0,0].DiceId, Is.EqualTo(5));
+            Assert.That(grid[0,2].DiceId, Is.EqualTo(1));            
+            Assert.That(grid[1,0].DiceId, Is.EqualTo(6));
+            Assert.That(grid[1,2].DiceId, Is.EqualTo(2));                        
         }
 
         [Test]
@@ -80,8 +80,8 @@ namespace Match3.Editor.Tests
                 {3,4}               
             });
             grid.Swap(new Vector2Int(0,0),new Vector2Int(1,0) );
-            Assert.That(grid[0,0].DiceType, Is.EqualTo(4));
-            Assert.That(grid[1,0].DiceType, Is.EqualTo(3));
+            Assert.That(grid[0,0].DiceId, Is.EqualTo(4));
+            Assert.That(grid[1,0].DiceId, Is.EqualTo(3));
         }
         
         [Test]
@@ -93,8 +93,8 @@ namespace Match3.Editor.Tests
                 {3,4}               
             });
             grid.Swap(new Vector2Int(0,0),new Vector2Int(0,1) );
-            Assert.That(grid[0,0].DiceType, Is.EqualTo(1));
-            Assert.That(grid[0,1].DiceType, Is.EqualTo(3));
+            Assert.That(grid[0,0].DiceId, Is.EqualTo(1));
+            Assert.That(grid[0,1].DiceId, Is.EqualTo(3));
         }
 
                
@@ -112,8 +112,8 @@ namespace Match3.Editor.Tests
             Assert.That(grid[Vector2Int.one].IsEmpty, Is.True);
             Assert.That(grid[Vector2Int.one * 2].IsEmpty, Is.True);
             
-            Assert.That(grid[0,2].DiceType == 1);
-            Assert.That(grid[2,0].DiceType == 9);            
+            Assert.That(grid[0,2].DiceId == 1);
+            Assert.That(grid[2,0].DiceId == 9);            
         }
     }
 }

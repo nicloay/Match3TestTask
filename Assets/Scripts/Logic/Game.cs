@@ -14,9 +14,10 @@ namespace Match3.Logic
     public class Game
     {
         public const int InitialSpawnAttemptNumber = 1000;
+        
         public readonly int ColumnNumber;
         public readonly int RowNumber;
-        public readonly int ColorNumber;
+        public readonly int DiceNumber;
 
         public readonly Grid Grid;
         private readonly IMatchFinder _matcher;
@@ -25,12 +26,16 @@ namespace Match3.Logic
         private readonly GravityPhysics _gravity;
         
         private IRandomDiceGenerator _randomDiceGenerator;
-        
-        
-        public Game(int columnNumber, int rowNumber, int colorNumber)
+
+        public Game(Vector2Int boardSize, int diceNumber) : this(boardSize.x, boardSize.y, diceNumber)
+        {
+        }
+
+
+        public Game(int columnNumber, int rowNumber, int diceNumber)
         {        
-            ColorNumber = colorNumber;
-            if (ColorNumber < 4)
+            DiceNumber = diceNumber;
+            if (DiceNumber < 4)
             {
                 throw new LevelDesignProblemException("minimum number of dices must be 4");
             }
@@ -38,16 +43,15 @@ namespace Match3.Logic
             RowNumber = rowNumber;
 
             Assert.IsTrue(ColumnNumber > 0 && RowNumber > 0);
-            Assert.IsTrue(ColorNumber >= 3 || RowNumber >= 3);
+            Assert.IsTrue(DiceNumber >= 3 || RowNumber >= 3);
             
                         
             Grid = Grid.CreateWithSize(ColumnNumber, RowNumber);
             _matcher = new LineMatcher(Grid);
-            _randomDiceGenerator = new SimpleRandomDiceGenerator(ColorNumber);
+            _randomDiceGenerator = new SimpleRandomDiceGenerator(DiceNumber);
             _spawner = new Spawner(_randomDiceGenerator, _matcher);
             _destroyer = new MatchesDestroyer(_matcher);
-            _gravity = new GravityPhysics();
-            FillEmptyGrid();
+            _gravity = new GravityPhysics();            
         }
 
 
@@ -93,8 +97,9 @@ namespace Match3.Logic
         /// </summary>
         /// <returns>Number of attempts performed to generate level</returns>
         /// <exception cref="LevelDesignProblemException"></exception>
-        private void FillEmptyGrid()
+        public List<SpawnDiceAction> FillEmptyGrid()
         {
+            List<SpawnDiceAction> result; 
             int safeCounter = 20000;
             do
             {    
@@ -104,8 +109,10 @@ namespace Match3.Logic
                     Debug.LogError("problem with loop here");
                     throw new Exception();
                 }                
-                _spawner.Apply(Grid);
+                result = _spawner.Apply(Grid);
             } while (_matcher.GetHints().Length == 0);
+
+            return result;
         }
     }
 }

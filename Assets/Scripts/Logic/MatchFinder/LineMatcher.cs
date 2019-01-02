@@ -50,7 +50,7 @@ namespace Match3.Logic.MatchFinder
                     {
                         currentPosition = GetCombinedPosition(mainAxis, y, spareAxis, currentX);
                         previousPosition = GetCombinedPosition(mainAxis, y, spareAxis, previousX);
-                        if (_grid[currentPosition].DiceType == _grid[previousPosition].DiceType)
+                        if (_grid[currentPosition].DiceId == _grid[previousPosition].DiceId)
                         {
                             continue;
                         }
@@ -82,7 +82,7 @@ namespace Match3.Logic.MatchFinder
                 {
                     Vector2Int neighbourPosition = position + offset * i;                    
                     if (!_grid.IsCellExists(neighbourPosition) 
-                        || _grid[neighbourPosition].DiceType != _grid[position].DiceType)
+                        || _grid[neighbourPosition].DiceId != _grid[position].DiceId)
                     {
                         break;
                     }
@@ -93,7 +93,7 @@ namespace Match3.Logic.MatchFinder
                 {
                     Vector2Int neighbourPosition = position - offset * i;                    
                     if (!_grid.IsCellExists(neighbourPosition) 
-                        || _grid[neighbourPosition].DiceType != _grid[position].DiceType)
+                        || _grid[neighbourPosition].DiceId != _grid[position].DiceId)
                     {
                         break;
                     }
