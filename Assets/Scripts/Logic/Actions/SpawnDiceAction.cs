@@ -4,7 +4,7 @@ using UnityEngine;
 namespace Logic
 {
         
-    public struct SpawnDiceAction : IDiceAction
+    public struct SpawnDiceAction
     {
         public Vector2Int Destination;
 

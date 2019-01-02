@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Logic.Physics
 {
-    public struct DiceMovement : IDiceAction
+    public struct DiceMovement
     {        
         public Vector2Int Source;
         public Vector2Int Destination;

@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
+using Logic;
+using Logic.Actions;
 using Logic.Physics;
 using Logic.RNG;
 using Match3.Logic.MatchFinder;
@@ -18,6 +21,8 @@ namespace Match3.Logic
         public readonly Grid Grid;
         private readonly IMatchFinder _matcher;
         private readonly Spawner _spawner;
+        private readonly MatchesDestroyer _destroyer;
+        private readonly GravityPhysics _gravity;
         
         private IRandomDiceGenerator _randomDiceGenerator;
         
@@ -40,9 +45,48 @@ namespace Match3.Logic
             _matcher = new LineMatcher(Grid);
             _randomDiceGenerator = new SimpleRandomDiceGenerator(ColorNumber);
             _spawner = new Spawner(_randomDiceGenerator, _matcher);
+            _destroyer = new MatchesDestroyer(_matcher);
+            _gravity = new GravityPhysics();
             FillEmptyGrid();
         }
 
+
+        public bool IsMovePossible(Vector2Int from, Vector2Int to)
+        {
+            Grid.Swap(from, to);
+            bool result = _matcher.ContainsMatchAt(from) || _matcher.ContainsMatchAt(to);
+            Grid.Swap(from, to);
+            return result;
+        }
+
+        
+        /// <summary>
+        /// Make swap and get required actions
+        /// </summary>
+        /// <param name="from"></param>
+        /// <param name="to"></param>
+        /// <returns></returns>
+        public List<SingleChangeActions> MakeMove(Vector2Int from, Vector2Int to)
+        {
+            Assert.IsTrue(IsMovePossible(from, to), " Wrong move");            
+            Grid.Swap(from, to);
+            List<SingleChangeActions> result = new List<SingleChangeActions>();
+            
+            while (_matcher.GetMatches().Length > 0)
+            {                
+                //destroy
+                List<DestroyAction> destroyActions = _destroyer.Apply(Grid);
+                //gravity
+                List<DiceMovement> movement = _gravity.Apply(Grid);            
+                //spawn
+                List<SpawnDiceAction> spawns = _spawner.Apply(Grid);
+                
+                result.Add(new SingleChangeActions(destroyActions, spawns, movement));
+            }
+
+            return result;
+        }
+        
         
         /// <summary>
         /// Fill grid with random gems

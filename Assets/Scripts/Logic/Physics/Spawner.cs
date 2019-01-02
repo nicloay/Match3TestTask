@@ -9,7 +9,7 @@ namespace Logic.Physics
     /// <summary>
     /// Spawn dices to empty fields
     /// </summary>
-    public class Spawner : IPhysics
+    public class Spawner
     {
         private IRandomDiceGenerator _randomDiceGenerator;
         private IMatchFinder _matcher;
@@ -19,9 +19,9 @@ namespace Logic.Physics
             _matcher = matcher;
         }
         
-        public List<IDiceAction> Apply(Grid.Grid grid)
+        public List<SpawnDiceAction> Apply(Grid.Grid grid)
         {
-            List<IDiceAction> result = new List<IDiceAction>();
+            List<SpawnDiceAction> result = new List<SpawnDiceAction>();
             grid.ForEachEmptyCell(position =>
             {
                 int safeCounter = 2000;
