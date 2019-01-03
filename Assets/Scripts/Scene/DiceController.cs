@@ -22,6 +22,7 @@ namespace Scene
         {
             Assert.IsTrue(diceId>=0 && diceId < SpriteById.Count);            
             _spriteRenderer.sprite = SpriteById[diceId];
+            transform.localPosition = Vector3.zero;
             DiceId = diceId;
         }
     }

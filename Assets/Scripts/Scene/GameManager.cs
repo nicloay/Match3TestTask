@@ -48,7 +48,9 @@ namespace GameView
 		[SerializeField] private GridController _grid;
 
 		[SerializeField] private Vector2Int _size;
-		
+
+		[SerializeField] private bool _useStaticSeed;
+		[SerializeField] private int _seed;
 		
 		public readonly GameState GameState;
 				
@@ -57,7 +59,15 @@ namespace GameView
 		private Game _game;
 		void Awake()
 		{
-			_game = new Game(_size, _diceNumber);	
+			if (_useStaticSeed)
+			{				
+				_game = new Game(_size, _diceNumber, _seed);	
+			}
+			else
+			{
+				_game = new Game(_size, _diceNumber);
+			}
+			
 			_grid.Initialize(_game.Grid.Size);	
 			_grid.OnUserSwapFields.AddListener(TryToMakeSwap);
 		}
@@ -68,7 +78,7 @@ namespace GameView
 			{
 				//make move
 				List<DestroySpawnGravityAction> actions = _game.MakeSwap(arg0, arg1);								
-				_grid.SwapDices(arg0, arg1, actions);
+				_grid.SwapDicesAndApplyActions(arg0, arg1, actions);
 			}
 			else
 			{

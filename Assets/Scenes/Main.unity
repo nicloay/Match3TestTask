@@ -678,6 +678,8 @@ MonoBehaviour:
   _diceNumber: 5
   _grid: {fileID: 1867099713}
   _size: {x: 9, y: 9}
+  _useStaticSeed: 1
+  _seed: 709
 --- !u!4 &1867099715
 Transform:
   m_ObjectHideFlags: 0

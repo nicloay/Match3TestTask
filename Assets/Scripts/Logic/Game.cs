@@ -31,8 +31,15 @@ namespace Match3.Logic
         {
         }
 
+        public Game(Vector2Int boardSize, int diceNumber, int seed) : this(boardSize.x, boardSize.y, diceNumber, seed)
+        {
+        }
+        
+        public Game(int columnNumber, int rowNumber, int diceNumber) : this(columnNumber, rowNumber, diceNumber, null)
+        {            
+        }
 
-        public Game(int columnNumber, int rowNumber, int diceNumber)
+        private Game(int columnNumber, int rowNumber, int diceNumber, int? seed)
         {        
             DiceNumber = diceNumber;
             if (DiceNumber < 4)
@@ -48,12 +55,13 @@ namespace Match3.Logic
                         
             Grid = Grid.CreateWithSize(ColumnNumber, RowNumber);
             _matcher = new LineMatcher(Grid);
-            _randomDiceGenerator = new SimpleRandomDiceGenerator(DiceNumber);
+            _randomDiceGenerator = seed == null
+                ? new SimpleRandomDiceGenerator(DiceNumber)
+                : new SimpleRandomDiceGenerator(DiceNumber, seed.Value);
             _spawner = new Spawner(_randomDiceGenerator, _matcher);
             _destroyer = new MatchesDestroyer(_matcher);
             _gravity = new GravityPhysics();            
         }
-
 
         public bool IsSwapPossible(Vector2Int from, Vector2Int to)
         {

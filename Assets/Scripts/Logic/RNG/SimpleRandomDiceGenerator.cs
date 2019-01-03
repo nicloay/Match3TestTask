@@ -2,6 +2,8 @@
 using System.Runtime.Remoting;
 using Match3.Utils;
 using NUnit.Framework;
+using UnityEngine;
+using Random = System.Random;
 
 namespace Logic.RNG
 {
@@ -14,12 +16,18 @@ namespace Logic.RNG
         private Random _random;
         private int _currentId;
         
-        public SimpleRandomDiceGenerator(int colorNumber)
+        public SimpleRandomDiceGenerator(int colorNumber, int seed)
         {        
+            Debug.Log("Start rng with seed ="+seed);
             Assert.IsTrue(colorNumber > 1);
-            _random = new Random();
+            
+            _random = new Random(seed);
             _shuffledStack = ArrayUtil.GenerateSequencedArray(colorNumber, ShuffleStackNumber); 
             ShuffleStack();
+        }
+
+        public SimpleRandomDiceGenerator(int colorNumber) : this(colorNumber, UnityEngine.Random.Range(int.MinValue, int.MaxValue))
+        {            
         }
 
 

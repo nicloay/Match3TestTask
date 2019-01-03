@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Logic;
 using Logic.Actions;
+using Logic.Physics;
 using Match3.Utils;
 using Scene;
 using UnityEngine;
@@ -93,6 +94,13 @@ namespace Match3.Scene
 		private IEnumerator DoHandleSpawns(List<SpawnDiceAction> actions)
 		{
 			//1 find first empty field in the bottom which waiting for spawning
+			SpawnDicesWithOffsets(actions);
+
+			yield return StartCoroutine(_gravity.ApplyGravity(_fields));
+		}
+
+		private void SpawnDicesWithOffsets(List<SpawnDiceAction> actions)
+		{
 			Dictionary<int, int> bottomYByColumnId = new Dictionary<int, int>();
 			actions.ForEach(action =>
 			{
@@ -105,71 +113,33 @@ namespace Match3.Scene
 				else
 				{
 					bottomYByColumnId.Add(columnId, rowId);
-				}				
+				}
 			});
 
 			Dictionary<int, OffsetWithTime> yOffsetByColumn = new Dictionary<int, OffsetWithTime>();
-			foreach (KeyValuePair<int,int> keyValuePair in bottomYByColumnId)
+			foreach (KeyValuePair<int, int> keyValuePair in bottomYByColumnId)
 			{
 				int cellDicstance = _boardSize.y - keyValuePair.Value;
 
 				OffsetWithTime value = new OffsetWithTime()
 				{
-					Offset = cellDicstance * _bgTileOffset.y,					
-				};				
-				
+					Offset = cellDicstance * _bgTileOffset.y,
+				};
+
 				yOffsetByColumn.Add(keyValuePair.Key, value);
 			}
-			
+
 			// place dices with local offset and then start time 		
-			HashSet<SpawnDiceAction> _fieldsInAction  = new HashSet<SpawnDiceAction>();
+			HashSet<SpawnDiceAction> _fieldsInAction = new HashSet<SpawnDiceAction>();
 			foreach (var spawnAction in actions)
 			{
 				int columnId = spawnAction.Destination.x;
 				int rowId = spawnAction.Destination.y;
 				DiceController dice = _dicePool.Get();
 				dice.SetDice(spawnAction.DiceId);
-				_fields[columnId,rowId].SetDice(dice, yOffsetByColumn[columnId].Offset);
+				_fields[columnId, rowId].SetDice(dice, yOffsetByColumn[columnId].Offset);
 				_fieldsInAction.Add(spawnAction);
 			}
-
-			yield return StartCoroutine(_gravity.ApplyGravity(_fields));
-
-			//animate fall down
-//			float time = 0.0f;
-//			List<SpawnDiceAction> actionToRemove = new List<SpawnDiceAction>();
-//			while (_fieldsInAction.Count > 0)
-//			{
-//				actionToRemove.Clear();
-//				foreach (var action in actions)
-//				{
-//					int columnId = action.Destination.x;
-//					int rowId = action.Destination.y;
-//
-//					OffsetWithTime offsetWithTime = yOffsetByColumn[columnId];
-//
-//					float easeTime = time;
-//					if (time > offsetWithTime.Duration)
-//					{
-//						easeTime = offsetWithTime.Duration;
-//						actionToRemove.Add(action);
-//					}
-//
-//					float yOffset = Equations.ChangeFloat(easeTime, offsetWithTime.Offset, -offsetWithTime.Offset,
-//						offsetWithTime.Duration, _gravityEaseType);
-//					
-//					_fields[columnId,rowId].SetDiceOffset(yOffset);
-//				}
-//
-//
-//				foreach (var removeAction in actionToRemove)
-//				{
-//					_fieldsInAction.Remove(removeAction);
-//				}
-//								
-//				yield return null;
-//				time += Time.deltaTime;
-//			}											
 		}
 
 		public void ShowWrongMove(Vector2Int from, Vector2Int to)
@@ -199,7 +169,7 @@ namespace Match3.Scene
 		}
 
 
-		public void SwapDices(Vector2Int from, Vector2Int to, List<DestroySpawnGravityAction> actions)
+		public void SwapDicesAndApplyActions(Vector2Int from, Vector2Int to, List<DestroySpawnGravityAction> actions)
 		{
 			StartCoroutine(DoSwapDices(from, to, actions));
 		}
@@ -216,11 +186,22 @@ namespace Match3.Scene
 					DestroyDice(actionDestroy.CellPosition);
 				}
 				
-				//spawn + gravity
-
+				//spawn + gravity				
+				
+				MoveDicesFromFieldToField(action.Moves);
+				SpawnDicesWithOffsets(action.Spawns);
+								
+				yield return  StartCoroutine(_gravity.ApplyGravity(_fields));
+				
 				yield return null;
 			}
 		}
+
+		private void MoveDicesFromFieldToField(List<DiceMovement> movements)
+		{
+			movements.ForEach(movement => _fields[movement.Source.x, movement.Source.y].SwapDiceWith(_fields[movement.Destination.x, movement.Destination.y]));
+		}
+		
 
 		private void DestroyDice(Vector2Int position)
 		{
