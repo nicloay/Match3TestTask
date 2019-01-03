@@ -28,12 +28,17 @@ namespace Scene
         {
             DestroyAction++;
             
+            
             //_particles.transform.position = field.transform.position;
             ParticleSystem.EmitParams emitParams = new ParticleSystem.EmitParams()
             {
-                position = field.transform.position
-            };
+                applyShapeToPosition = true,
+                position = field.transform.position              
+            };            
             _particles.Emit(emitParams, _particleNumberPerDestroy);
+            //_particles.Play();
+            
+            
             float time = 0.0f;
             do
             {
