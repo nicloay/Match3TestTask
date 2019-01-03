@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using Logic;
+using Logic.Actions;
 using Match3.Logic;
 using Match3.Scene;
 using UnityEngine;
@@ -63,13 +64,15 @@ namespace GameView
 
 		private void TryToMakeSwap(Vector2Int arg0, Vector2Int arg1)
 		{
-			if (_game.IsMovePossible(arg0, arg1))
+			if (_game.IsSwapPossible(arg0, arg1))
 			{
 				//make move
+				List<DestroySpawnGravityAction> actions = _game.MakeSwap(arg0, arg1);								
+				_grid.SwapDices(arg0, arg1, actions);
 			}
 			else
 			{
-				_grid.ShwoWrongMove(arg0, arg1);
+				_grid.ShowWrongMove(arg0, arg1);
 			}
 		}
 

@@ -55,7 +55,7 @@ namespace Match3.Logic
         }
 
 
-        public bool IsMovePossible(Vector2Int from, Vector2Int to)
+        public bool IsSwapPossible(Vector2Int from, Vector2Int to)
         {
             Grid.Swap(from, to);
             bool result = _matcher.ContainsMatchAt(from) || _matcher.ContainsMatchAt(to);
@@ -70,11 +70,11 @@ namespace Match3.Logic
         /// <param name="from"></param>
         /// <param name="to"></param>
         /// <returns></returns>
-        public List<SingleChangeActions> MakeMove(Vector2Int from, Vector2Int to)
+        public List<DestroySpawnGravityAction> MakeSwap(Vector2Int from, Vector2Int to)
         {
-            Assert.IsTrue(IsMovePossible(from, to), " Wrong move");            
+            Assert.IsTrue(IsSwapPossible(from, to), " Wrong move");            
             Grid.Swap(from, to);
-            List<SingleChangeActions> result = new List<SingleChangeActions>();
+            List<DestroySpawnGravityAction> result = new List<DestroySpawnGravityAction>();
             
             while (_matcher.GetMatches().Length > 0)
             {                
@@ -85,7 +85,7 @@ namespace Match3.Logic
                 //spawn
                 List<SpawnDiceAction> spawns = _spawner.Apply(Grid);
                 
-                result.Add(new SingleChangeActions(destroyActions, spawns, movement));
+                result.Add(new DestroySpawnGravityAction(destroyActions, spawns, movement));
             }
 
             return result;

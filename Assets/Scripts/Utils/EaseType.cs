@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using System.Collections;
 
 namespace Match3.Utils
@@ -48,6 +49,20 @@ namespace Match3.Utils
 		EaseInOutBounce = 39,
 		EaseOutInBounce = 40
 	}
+
+	[Serializable]
+	public struct EaseConfig
+	{
+		public EaseType EaseType;
+		public float Duration;
+
+		public EaseConfig(EaseType easeType, float duration)
+		{
+			EaseType = easeType;
+			Duration = duration;
+		}
+	} 
+	
 
 	public class Equations
 	{
@@ -795,7 +810,7 @@ namespace Match3.Utils
 			return methods[(int) easeType](time, startValue, change, duration);
 		}
 		
-		public static Vector3 ChangeVector(float time, Vector3 startValue, Vector3 change, float duration, EaseType easeType)
+		public static Vector3 ChangeVector3(float time, Vector3 startValue, Vector3 change, float duration, EaseType easeType)
 		{
 			float x = methods[(int) easeType](time, startValue.x, change.x, duration);
 			float y = methods[(int) easeType](time, startValue.y, change.y, duration);
@@ -824,5 +839,8 @@ namespace Match3.Utils
 				z = ChangeFloatPingPong(time, startValue.z, change.z, duration, easeType) 
 			};
 		}
+
+		public delegate Vector3 ChangeVector3Delegate(float time, Vector3 startValue, Vector3 change, float duration,
+			EaseType easeType);
 	}
 }

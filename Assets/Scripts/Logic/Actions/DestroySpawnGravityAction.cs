@@ -3,13 +3,13 @@ using Logic.Physics;
 
 namespace Logic.Actions
 {
-    public class SingleChangeActions 
+    public class DestroySpawnGravityAction 
     {
         public List<DestroyAction> Destroys;
         public List<SpawnDiceAction> Spawns;
         public List<DiceMovement> Moves;
 
-        public SingleChangeActions(List<DestroyAction> destroys, List<SpawnDiceAction> spawns, List<DiceMovement> moves)
+        public DestroySpawnGravityAction(List<DestroyAction> destroys, List<SpawnDiceAction> spawns, List<DiceMovement> moves)
         {
             Destroys = destroys;
             Spawns = spawns;

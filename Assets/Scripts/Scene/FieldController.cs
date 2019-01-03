@@ -15,28 +15,54 @@ namespace Scene
     public class FieldController : MonoBehaviour, IDropHandler, IDragHandler
     {
         public UserSwapFieldsEvent OnUserSwapFields;
-        public DiceController Dice { get; private set; }
-        
-        
+
+        private DiceController _dice;
+        public DiceController Dice
+        {
+            get { return _dice;}
+            private set
+            {
+                if (value != _dice)
+                {
+                    _dice = value;
+                    _dice.transform.SetParent(transform, true);
+                }
+            }
+        }
+
+
         private Vector2Int _position;                
         public void Initialize(Vector2Int position)
         {
             _position = position;
         }
 
-        public void SetDice(DiceController dice)
-        {
-            SetDice(dice, 0);
-        }
 
         public void SetDice(DiceController dice, float yOffset)
         {
             Dice = dice;
-            dice.transform.SetParent(transform);
             SetDiceOffset(yOffset);
             dice.gameObject.SetActive(true);
         }
+        
+        public void SwapDiceWith(FieldController anotherField)
+        {
+            DiceController dice = Dice;
+            Dice = anotherField._dice;
+            anotherField.Dice = dice;            
+        }
+        
+        private void SetDice(DiceController dice)
+        {            
+            Dice = dice;
+            dice.transform.SetParent(transform);
+        }
+        
 
+        
+        
+        
+        
         public void SetDiceOffset(float yOffset)
         {
             Dice.transform.localPosition = new Vector3(0f, yOffset, 0f);
@@ -60,7 +86,6 @@ namespace Scene
             {
                 return true;
             }
-
             return false;
         }
 

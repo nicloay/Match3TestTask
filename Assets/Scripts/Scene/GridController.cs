@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using Logic;
+using Logic.Actions;
 using Match3.Utils;
 using Scene;
 using UnityEngine;
@@ -28,9 +29,13 @@ namespace Match3.Scene
 
 		[SerializeField] private EaseType _gravityEaseType;
 		
-		[SerializeField] private float _wrongMoveDuration;
 		
-		[SerializeField] private EaseType _wrongMoveEaseType;
+		
+		[SerializeField] private EaseConfig _wrongMoveEaseconfig;
+
+		[SerializeField] private EaseConfig _swapMoveConfig;
+		
+		
 		
 		
 		private FieldController[,] _fields;
@@ -170,12 +175,14 @@ namespace Match3.Scene
 			}											
 		}
 
-		public void ShwoWrongMove(Vector2Int from, Vector2Int to)
+		public void ShowWrongMove(Vector2Int from, Vector2Int to)
 		{
-			StartCoroutine(DoShwoWrongMove(from, to));
+			StartCoroutine(TweenDices(from, to, _wrongMoveEaseconfig, Equations.ChangeVector3PingPong));
 		}
 
-		private IEnumerator DoShwoWrongMove(Vector2Int from, Vector2Int to)
+		
+
+		public IEnumerator TweenDices(Vector2Int from, Vector2Int to, EaseConfig easeConfig, Equations.ChangeVector3Delegate function)
 		{
 			FieldController fieldFrom = _fields[from.x, from.y];
 			FieldController fieldTo = _fields[to.x, to.y];
@@ -186,15 +193,43 @@ namespace Match3.Scene
 			do
 			{
 				time += Time.deltaTime;
-				time = Mathf.Min(time, _wrongMoveDuration);
-				Vector3 offset =
-					Equations.ChangeVector3PingPong(time, Vector3.zero, diff, _wrongMoveDuration, _wrongMoveEaseType);
+				time = Mathf.Min(time, easeConfig.Duration);
+				Vector3 offset = function(time, Vector3.zero, diff, easeConfig.Duration, easeConfig.EaseType);
 				fieldFrom.Dice.transform.localPosition = -offset;
 				fieldTo.Dice.transform.localPosition =  offset;
 				yield return null;
-			} while (time < _wrongMoveDuration);
-
+			} while (time < easeConfig.Duration);
 		}
+
+
+		public void SwapDices(Vector2Int from, Vector2Int to, List<DestroySpawnGravityAction> actions)
+		{
+			StartCoroutine(DoSwapDices(from, to, actions));
+		}
+				
+		private IEnumerator DoSwapDices(Vector2Int from, Vector2Int to, List<DestroySpawnGravityAction> actions)
+		{
+			yield return StartCoroutine(TweenDices(from, to, _swapMoveConfig, Equations.ChangeVector3));
+			_fields[from.x, from.y].SwapDiceWith(_fields[to.x, to.y]);			
+			foreach (var action in actions)
+			{
+				//destroy
+				foreach (var actionDestroy in action.Destroys)
+				{
+					DestroyDice(actionDestroy.CellPosition);
+				}
+				
+				//spawn + gravity
+
+				yield return null;
+			}
+		}
+
+		private void DestroyDice(Vector2Int position)
+		{
+			_dicePool.Release(_fields[position.x, position.y].Dice);
+		}
+		
 		
 		struct OffsetWithTime
 		{
