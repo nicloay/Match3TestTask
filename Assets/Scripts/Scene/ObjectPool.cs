@@ -42,7 +42,7 @@ namespace Scene
         T GetNewInstance()
         {
             GameObject instance = Instantiate(_prefab, transform);
-            instance.SetActive(false);
+            instance.gameObject.SetActive(false);
             return instance.GetComponent<T>();
         }
     }

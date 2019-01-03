@@ -25,12 +25,21 @@ namespace Scene
                 if (value != _dice)
                 {
                     _dice = value;
-                    _dice.transform.SetParent(transform, true);
+                    if (value != null)
+                    {                        
+                        _dice.transform.SetParent(transform, true);
+                    }
                 }
             }
         }
 
 
+
+        public void ClearDice()
+        {
+            Dice = null;
+        }
+        
         private Vector2Int _position;                
         public void Initialize(Vector2Int position)
         {
@@ -58,7 +67,7 @@ namespace Scene
             dice.transform.SetParent(transform);
         }
 
-
+        
 
         public bool IsDiceGrounded
         {

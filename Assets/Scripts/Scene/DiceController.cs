@@ -11,6 +11,14 @@ namespace Scene
         private SpriteRenderer _spriteRenderer;
 
         public int DiceId { get; private set; }
+
+        public float Alpha
+        {
+            set
+            {
+                _spriteRenderer.color = new Color(1f, 1f, 1f, value);                 
+            }
+        }
         
         private void Awake()
         {

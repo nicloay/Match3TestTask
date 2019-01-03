@@ -32,12 +32,15 @@ namespace Match3.Scene
 
 		[SerializeField] private EaseConfig _swapMoveConfig;
 
-		
+		[SerializeField] private DestroyDiceController _diceDestroyer;
 		
 		
 		private FieldController[,] _fields;
 		private Vector2Int _boardSize;
 		private Vector2 _boardPhysicalSize;
+		
+		
+		
 		public Vector2 BoardPhysicalSize
 		{
 			get { return _boardPhysicalSize; }
@@ -82,6 +85,7 @@ namespace Match3.Scene
 			}
 		
 			_dicePool.WarmUp(size.x * (size.y + 1));
+			_diceDestroyer.Initialize(_dicePool);
 		}
 
 		public void HandleSpawns(List<SpawnDiceAction> actions)
@@ -171,20 +175,27 @@ namespace Match3.Scene
 
 		public void SwapDicesAndApplyActions(Vector2Int from, Vector2Int to, List<DestroySpawnGravityAction> actions)
 		{
-			StartCoroutine(DoSwapDices(from, to, actions));
+			StartCoroutine(DoSwapDicesAndApplyActions(from, to, actions));
 		}
 				
-		private IEnumerator DoSwapDices(Vector2Int from, Vector2Int to, List<DestroySpawnGravityAction> actions)
+		private IEnumerator DoSwapDicesAndApplyActions(Vector2Int from, Vector2Int to, List<DestroySpawnGravityAction> actions)
 		{
-			yield return StartCoroutine(TweenDices(from, to, _swapMoveConfig, Equations.ChangeVector3));
+			yield return StartCoroutine(TweenDices(from, to, _swapMoveConfig, Equations.ChangeVector3));						
 			_fields[from.x, from.y].SwapDiceWith(_fields[to.x, to.y]);			
 			foreach (var action in actions)
 			{
+				
 				//destroy
 				foreach (var actionDestroy in action.Destroys)
 				{
-					DestroyDice(actionDestroy.CellPosition);
+					StartCoroutine( _diceDestroyer.DestroyDice(_fields[actionDestroy.CellPosition.x, actionDestroy.CellPosition.y]));					
 				}
+
+				while (_diceDestroyer.DestroyAction > 0)
+				{
+					yield return null;
+				}
+				
 				
 				//spawn + gravity				
 				
@@ -206,6 +217,7 @@ namespace Match3.Scene
 		private void DestroyDice(Vector2Int position)
 		{
 			_dicePool.Release(_fields[position.x, position.y].Dice);
+			_fields[position.x, position.y].ClearDice();
 		}
 		
 		
