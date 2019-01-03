@@ -34,7 +34,7 @@ namespace Scene
             transform.localPosition = Vector3.zero;
             DiceId = diceId;            
         }
-
+    
 
     }
 }

@@ -13,11 +13,11 @@ namespace Scene
             FindObjectOfType<GridController>().OnGridSizeChanged.AddListener(SetupMask);            
         }
 
-        private void SetupMask(Vector2 boardSize)
+        private void SetupMask(Vector2 physicalSize, Vector2Int gridSize)
         {
             Vector3 scale = new Vector3();
-            scale.x = boardSize.x / _spriteMask.sprite.bounds.size.x;
-            scale.y = boardSize.y / _spriteMask.sprite.bounds.size.y;
+            scale.x = physicalSize.x / _spriteMask.sprite.bounds.size.x;
+            scale.y = physicalSize.y / _spriteMask.sprite.bounds.size.y;
             transform.localScale = scale;
         }
     }

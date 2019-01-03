@@ -21,15 +21,15 @@ public class CameraController : MonoBehaviour
 		FindObjectOfType<GridController>().OnGridSizeChanged.AddListener(OnBoardSizeChange);
 	}
 
-	public void OnBoardSizeChange(Vector2 boardSize)
+	public void OnBoardSizeChange(Vector2 physicalSize, Vector2Int gridSize)
 	{
-		if (boardSize.y * _camera.aspect > boardSize.x)
+		if (physicalSize.y * _camera.aspect > physicalSize.x)
 		{
-			_camera.orthographicSize = boardSize.y / 2.0f;
+			_camera.orthographicSize = physicalSize.y / 2.0f;
 		}
 		else
 		{
-			_camera.orthographicSize = boardSize.x / _camera.aspect / 2.0f;
+			_camera.orthographicSize = physicalSize.x / _camera.aspect / 2.0f;
 		}
 	}
 }

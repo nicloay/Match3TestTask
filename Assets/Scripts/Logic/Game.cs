@@ -63,6 +63,11 @@ namespace Match3.Logic
             _gravity = new GravityPhysics();            
         }
 
+        public Hint[] GetHints()
+        {
+            return _matcher.GetHints();
+        } 
+        
         public bool IsSwapPossible(Vector2Int from, Vector2Int to)
         {
             Grid.Swap(from, to);

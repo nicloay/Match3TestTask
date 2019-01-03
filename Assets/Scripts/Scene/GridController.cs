@@ -16,7 +16,7 @@ namespace Match3.Scene
 		public UserSwapFieldsEvent OnUserSwapFields;
 		
 		[Serializable]
-		public class GridSizeChangeEvent : UnityEvent<Vector2>{}
+		public class GridSizeChangeEvent : UnityEvent<Vector2, Vector2Int>{} //PhysicalSize, GridSize
 
 		public GridSizeChangeEvent OnGridSizeChanged;
 		
@@ -38,8 +38,7 @@ namespace Match3.Scene
 		private FieldController[,] _fields;
 		private Vector2Int _boardSize;
 		private Vector2 _boardPhysicalSize;
-		
-		
+				
 		
 		public Vector2 BoardPhysicalSize
 		{
@@ -52,7 +51,7 @@ namespace Match3.Scene
 				}
 
 				_boardPhysicalSize = value;
-				OnGridSizeChanged.Invoke(value);
+				OnGridSizeChanged.Invoke(value, _boardSize);
 			}
 		}
 
@@ -146,14 +145,15 @@ namespace Match3.Scene
 			}
 		}
 
-		public void ShowWrongMove(Vector2Int from, Vector2Int to)
+		public void ShowWrongMove(Vector2Int from, Vector2Int to, Action onDone)
 		{
-			StartCoroutine(TweenDices(from, to, _wrongMoveEaseconfig, Equations.ChangeVector3PingPong));
+			StartCoroutine(TweenDices(from, to, _wrongMoveEaseconfig, Equations.ChangeVector3PingPong, onDone));
 		}
 
 		
 
-		public IEnumerator TweenDices(Vector2Int from, Vector2Int to, EaseConfig easeConfig, Equations.ChangeVector3Delegate function)
+		public IEnumerator TweenDices(Vector2Int @from, Vector2Int to, EaseConfig easeConfig,
+			Equations.ChangeVector3Delegate function, Action onDone)
 		{
 			FieldController fieldFrom = _fields[from.x, from.y];
 			FieldController fieldTo = _fields[to.x, to.y];
@@ -170,17 +170,23 @@ namespace Match3.Scene
 				fieldTo.Dice.transform.localPosition =  offset;
 				yield return null;
 			} while (time < easeConfig.Duration);
+
+			if (onDone != null)
+			{
+				onDone();
+			}
 		}
 
 
-		public void SwapDicesAndApplyActions(Vector2Int from, Vector2Int to, List<DestroySpawnGravityAction> actions)
+		public void SwapDicesAndApplyActions(Vector2Int from, Vector2Int to, List<DestroySpawnGravityAction> actions, Action onDone)
 		{
-			StartCoroutine(DoSwapDicesAndApplyActions(from, to, actions));
+			StartCoroutine(DoSwapDicesAndApplyActions(from, to, actions, onDone));
 		}
 				
-		private IEnumerator DoSwapDicesAndApplyActions(Vector2Int from, Vector2Int to, List<DestroySpawnGravityAction> actions)
+		private IEnumerator DoSwapDicesAndApplyActions(Vector2Int @from, Vector2Int to,
+			List<DestroySpawnGravityAction> actions, Action onDone)
 		{
-			yield return StartCoroutine(TweenDices(from, to, _swapMoveConfig, Equations.ChangeVector3));						
+			yield return StartCoroutine(TweenDices(@from, to, _swapMoveConfig, Equations.ChangeVector3, null));						
 			_fields[from.x, from.y].SwapDiceWith(_fields[to.x, to.y]);			
 			foreach (var action in actions)
 			{
@@ -206,6 +212,7 @@ namespace Match3.Scene
 				
 				yield return null;
 			}
+			onDone();
 		}
 
 		private void MoveDicesFromFieldToField(List<DiceMovement> movements)
