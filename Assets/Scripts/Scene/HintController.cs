@@ -1,7 +1,6 @@
-﻿using GameView;
-using UnityEngine;
+﻿using UnityEngine;
 
-namespace Scene
+namespace Match3.Scene
 {
     public class HintController : MonoBehaviour
     {

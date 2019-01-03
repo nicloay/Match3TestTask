@@ -4541,8 +4541,8 @@ MonoBehaviour:
   OnUserSwapFields:
     m_PersistentCalls:
       m_Calls: []
-    m_TypeName: Scene.UserSwapFieldsEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
-      PublicKeyToken=null
+    m_TypeName: Match3.Scene.UserSwapFieldsEvent, Assembly-CSharp, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
   OnGridSizeChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -4579,16 +4579,16 @@ MonoBehaviour:
     OnStateChange:
       m_PersistentCalls:
         m_Calls: []
-      m_TypeName: GameView.GameStateChangeEvent, Assembly-CSharp, Version=0.0.0.0,
+      m_TypeName: Match3.Scene.GameStateChangeEvent, Assembly-CSharp, Version=0.0.0.0,
         Culture=neutral, PublicKeyToken=null
     OnTurnDone:
       m_PersistentCalls:
         m_Calls: []
-      m_TypeName: GameView.TurnDoneEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+      m_TypeName: Match3.Scene.TurnDoneEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
         PublicKeyToken=null
-  _diceNumber: 15
+  _diceNumber: 6
   _grid: {fileID: 1867099713}
-  _size: {x: 5, y: 5}
+  _size: {x: 9, y: 9}
   _useStaticSeed: 1
   _seed: 709
 --- !u!4 &1867099715

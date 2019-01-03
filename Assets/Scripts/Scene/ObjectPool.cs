@@ -2,7 +2,7 @@
 using System.Linq;
 using UnityEngine;
 
-namespace Scene
+namespace Match3.Scene
 {
     public class ObjectPool<T> : MonoBehaviour where T: MonoBehaviour
     {

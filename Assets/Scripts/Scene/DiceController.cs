@@ -2,7 +2,7 @@
 using UnityEngine;
 using UnityEngine.Assertions;
 
-namespace Scene
+namespace Match3.Scene
 {
     [RequireComponent(typeof(SpriteRenderer))]
     public class DiceController : MonoBehaviour

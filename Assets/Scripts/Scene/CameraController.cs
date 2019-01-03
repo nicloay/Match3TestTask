@@ -1,35 +1,31 @@
-﻿
-using GameView;
-using Match3.Scene;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.Assertions;
 
 namespace Match3.Scene
 {
-	
 
-}
-
-[RequireComponent(typeof(Camera))]
-public class CameraController : MonoBehaviour
-{
-	private Camera _camera;
-	void Awake()
+	[RequireComponent(typeof(Camera))]
+	public class CameraController : MonoBehaviour
 	{
-		_camera = GetComponent<Camera>();
-		Assert.IsNotNull(_camera);
-		FindObjectOfType<GridController>().OnGridSizeChanged.AddListener(OnBoardSizeChange);
-	}
+		private Camera _camera;
 
-	public void OnBoardSizeChange(Vector2 physicalSize, Vector2Int gridSize)
-	{
-		if (physicalSize.y * _camera.aspect > physicalSize.x)
+		void Awake()
 		{
-			_camera.orthographicSize = physicalSize.y / 2.0f;
+			_camera = GetComponent<Camera>();
+			Assert.IsNotNull(_camera);
+			FindObjectOfType<GridController>().OnGridSizeChanged.AddListener(OnBoardSizeChange);
 		}
-		else
+
+		public void OnBoardSizeChange(Vector2 physicalSize, Vector2Int gridSize)
 		{
-			_camera.orthographicSize = physicalSize.x / _camera.aspect / 2.0f;
+			if (physicalSize.y * _camera.aspect > physicalSize.x)
+			{
+				_camera.orthographicSize = physicalSize.y / 2.0f;
+			}
+			else
+			{
+				_camera.orthographicSize = physicalSize.x / _camera.aspect / 2.0f;
+			}
 		}
 	}
 }

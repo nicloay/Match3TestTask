@@ -1,23 +1,24 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using GameView;
+﻿
+using Match3.Scene;
 using UnityEngine;
 
-public class ShowGameOver : MonoBehaviour
+namespace Match3.UI
 {
-	[SerializeField]
-	private GameObject _gameOverPopup;
-
-	void Awake()
+	public class ShowGameOver : MonoBehaviour
 	{
-		_gameOverPopup.SetActive(false);
-		FindObjectOfType<GameManager>().Events.OnStateChange.AddListener(state =>
+		[SerializeField] private GameObject _gameOverPopup;
+
+		void Awake()
 		{
-			if (state == GameState.GameOver)
+			_gameOverPopup.SetActive(false);
+			FindObjectOfType<GameManager>().Events.OnStateChange.AddListener(state =>
 			{
-				_gameOverPopup.SetActive(true);
-			}
-		});
+				if (state == GameState.GameOver)
+				{
+					_gameOverPopup.SetActive(true);
+				}
+			});
+		}
+
 	}
-		
 }

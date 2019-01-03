@@ -5,7 +5,7 @@ using Match3.Utils;
 using NUnit.Framework.Interfaces;
 using UnityEngine;
 
-namespace Scene
+namespace Match3.Scene
 {
     
     /// <summary>

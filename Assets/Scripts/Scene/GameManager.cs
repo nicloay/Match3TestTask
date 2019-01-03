@@ -12,7 +12,7 @@ using UnityEngine.Events;
 using Random = System.Random;
 
 
-namespace GameView
+namespace Match3.Scene
 {	
 	public enum GameState
 	{

@@ -1,7 +1,7 @@
 ﻿using Match3.Scene;
 using UnityEngine;
 
-namespace Scene
+namespace Match3.Scene
 {
     [RequireComponent(typeof(SpriteMask))]
     public class BoardMaskController : MonoBehaviour

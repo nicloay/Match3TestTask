@@ -2,7 +2,7 @@
 using Match3.Utils;
 using UnityEngine;
 
-namespace Scene
+namespace Match3.Scene
 {
     public class DestroyDiceController : MonoBehaviour
     {
