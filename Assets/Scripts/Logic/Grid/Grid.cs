@@ -1,4 +1,7 @@
-﻿using UnityEngine;
+﻿using Logic.RNG;
+using Match3.Utils;
+using UnityEditor.Experimental.Build.AssetBundle;
+using UnityEngine;
 using UnityEngine.Assertions;
 
 namespace Logic.Grid
@@ -17,12 +20,12 @@ namespace Logic.Grid
 
 		private readonly Cell[,] Cells;
 		
-		public Grid(int columnNumber, int rowNumber)
+		private Grid(int columnNumber, int rowNumber)
 		{
 			Assert.IsTrue(columnNumber > 0);
 			Assert.IsTrue(rowNumber > 0);
 			Size = new Vector2Int(columnNumber, rowNumber);						
-			Cells = new Cell[columnNumber, rowNumber];
+			Cells = new Cell[columnNumber, rowNumber];						
 		}
 
 		
@@ -30,7 +33,7 @@ namespace Logic.Grid
 		/// Initialize Grid with dices content.
 		///
 		///    WARNING:
-		///     1. diceTypes has inverted x and y indexes
+		///     1. diceIds has inverted x and y indexes
 		///			e.g. dice[2,5] means columnId = 2, rowId = 5
 		///     2. y axis starts from the top dice[0, 0]  means
 		///			that you will assign value for the TOP LEFT corner of the grid 
@@ -46,34 +49,57 @@ namespace Logic.Grid
 		/// 		Cell[2,1] = 3
 		///   
 		/// </summary>
-		/// <param name="diceTypes">Array of dice types</param>
-		public static Grid CreateWithHumanReadableData(int[,] diceTypes) 
+		/// <param name="diceIds">Array of dice ids</param>
+		public static Grid CreateWithHumanReadableData(int[,] diceIds)
 		{
-			Grid result = new Grid(diceTypes.GetLength(1), diceTypes.GetLength(0));
-			result.ForEachCellId((x, y) => result.Cells[x,y].SetDice(diceTypes[result.RowNumber - y - 1, x]));			
-			result.Commit();
+			int[,] nativeFormat = ArrayUtil.ConvertArrayFromHumanReadebleFormatToNative(diceIds);
+			return CreateWithData(nativeFormat);
+		}
+
+		public static Grid CreateWithData(int[,] diceIds)
+		{
+			Grid result = new Grid(diceIds.GetLength(0), diceIds.GetLength(1));
+			result.ForEachCellId((x, y) => result.Cells[x,y].SetDice(diceIds[x, y]));						
 			return result;
 		}
 
-		public static Grid CreateWithData(int[,] diceTypes)
+		public static Grid CreateWithSize(int columnNumber, int rowNumber)
 		{
-			Grid result = new Grid(diceTypes.GetLength(0), diceTypes.GetLength(1));
-			result.ForEachCellId((x, y) => result.Cells[x,y].SetDice(diceTypes[x, y]));			
-			result.Commit();
+			Grid result = new Grid(columnNumber, rowNumber);
+			result.ClearWholeGrid();
 			return result;
+		}
+		
+		public void SetCellDirtyValue(Vector2Int position, int value)
+		{
+			Cells[position.x, position.y].SetDice(value);
 		}
 		
 				
-		public void Commit()
-		{
-			ForEachCell(cell => cell.Commit());
-		}
 		
-		private void ClearWholeGrid()
+		public void ClearWholeGrid()
 		{
-			ForEachCell(cell => cell.Clear());			
+			ForEachCell((x, y) => Cells[x, y].Clear());
+			
 		}
 
+		public void Swap(Vector2Int from, Vector2Int to)
+		{
+			int currentFromDice = Cells[from.x, from.y].DiceId;
+			int currentToDice = Cells[to.x, to.y].DiceId;
+			
+			SetCellDirtyValue(from, currentToDice);
+			SetCellDirtyValue(to, currentFromDice);
+			
+		}
+
+		public void ClearCells(params Vector2Int[] positions)
+		{
+			for (int i = 0; i < positions.Length; i++)
+			{
+				Cells[positions[i].x, positions[i].y].Clear();
+			}
+		}
 		
 
 		public Cell this[int columnId, int rowId]
@@ -85,5 +111,30 @@ namespace Logic.Grid
 		{
 			get { return Cells[position.x, position.y]; }
 		}
+
+
+		public void FillEmptyCellsWithDices(IRandomDiceGenerator generator)
+		{
+			ForEachEmptyCell((x,y) => Cells[x, y].SetDice(generator.GetNext()));
+		}
+
+		public void SetDiceToCell(Vector2Int position, int diceId)
+		{
+			Cells[position.x, position.y].SetDice(diceId);
+		}
+		
+		public bool IsCellExists(Vector2Int position)
+		{
+			for (int axis = 0; axis < 2; axis++)
+			{
+				if (position[axis] < 0 || position[axis] >= Size[axis])
+				{
+					return false;
+				}
+			}
+
+			return true;
+		}
+		
 	}
 }

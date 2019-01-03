@@ -1,36 +1,29 @@
-﻿namespace Logic.Grid
+﻿using NUnit.Framework.Constraints;
+using UnityEngine;
+using UnityEngine.Assertions;
+
+namespace Logic.Grid
 {
     public struct Cell
     {
-        public bool IsDirty { get; private set; }
-        public int DiceType { get; private set; }
-        public bool IsEmpty { get; private set; }
-
         
+        public int DiceId { get; private set; }
         
+        public bool IsEmpty
+        {
+            get { return DiceId < 0; }
+        }
+                
         public void Clear()
         {
-            IsDirty = false;
-            DiceType = -1;
-            IsEmpty = true;
+            SetDice(-1);            
         }
 
         public void SetDice(int dice)
-        {
-            DiceType = dice;
-            IsDirty = true;
-            IsEmpty = false;
-        }
-
-        
-        /// <summary>
-        /// Call this method when you want to remove dirty flag and validate content for consistency
-        /// </summary>
-        public void Commit()
-        {
-            IsDirty = false;
-            IsEmpty = DiceType >= 0;
-        }
+        {    
+            Assert.IsTrue(dice >= 0 || dice == -1);
+            DiceId = dice;                     
+        }                
         
         public bool HasTheSameDiceWith(Cell anotherCell)
         {
@@ -38,7 +31,7 @@
             {
                 return false;
             }
-            return DiceType == anotherCell.DiceType;
+            return DiceId == anotherCell.DiceId;
         }
     }
 }

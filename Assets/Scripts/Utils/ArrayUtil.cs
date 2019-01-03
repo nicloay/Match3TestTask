@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using UnityEditor;
+using UnityEditor.Experimental.Build.AssetBundle;
 
 namespace Match3.Utils
 {
@@ -37,6 +39,24 @@ namespace Match3.Utils
                 array[i] = array[tempId];
                 array[tempId] = tempValue;
             }
+        }
+
+        public static T[,] ConvertArrayFromHumanReadebleFormatToNative<T>(T[,] source)
+        {
+            int sourceWidth = source.GetLength(0);
+            int sourceHeight = source.GetLength(1);
+            int targetWidth = sourceHeight;
+            int targetHeight = sourceWidth;
+            T[,] result = new T[targetWidth, targetHeight];
+
+            for (int y = 0; y < targetHeight; y++)
+            {
+                for (int x = 0; x < targetWidth; x++)
+                {
+                    result[x, y] = source[sourceWidth - y - 1, x];
+                }
+            }            
+            return result;
         }
     }
 }
