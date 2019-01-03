@@ -25,16 +25,12 @@ namespace Match3.Scene
 
 		[SerializeField] private GameObject _fieldPrefab;		
 		
-		[SerializeField] private float _timePerCellTimeGravity;
-
-		[SerializeField] private EaseType _gravityEaseType;
-		
-		
+		[SerializeField] private GravityHandler _gravity;		
 		
 		[SerializeField] private EaseConfig _wrongMoveEaseconfig;
 
 		[SerializeField] private EaseConfig _swapMoveConfig;
-		
+
 		
 		
 		
@@ -119,8 +115,7 @@ namespace Match3.Scene
 
 				OffsetWithTime value = new OffsetWithTime()
 				{
-					Offset = cellDicstance * _bgTileOffset.y,
-					Duration = cellDicstance * _timePerCellTimeGravity
+					Offset = cellDicstance * _bgTileOffset.y,					
 				};				
 				
 				yOffsetByColumn.Add(keyValuePair.Key, value);
@@ -137,42 +132,44 @@ namespace Match3.Scene
 				_fields[columnId,rowId].SetDice(dice, yOffsetByColumn[columnId].Offset);
 				_fieldsInAction.Add(spawnAction);
 			}
-						
+
+			yield return StartCoroutine(_gravity.ApplyGravity(_fields));
+
 			//animate fall down
-			float time = 0.0f;
-			List<SpawnDiceAction> actionToRemove = new List<SpawnDiceAction>();
-			while (_fieldsInAction.Count > 0)
-			{
-				actionToRemove.Clear();
-				foreach (var action in actions)
-				{
-					int columnId = action.Destination.x;
-					int rowId = action.Destination.y;
-
-					OffsetWithTime offsetWithTime = yOffsetByColumn[columnId];
-
-					float easeTime = time;
-					if (time > offsetWithTime.Duration)
-					{
-						easeTime = offsetWithTime.Duration;
-						actionToRemove.Add(action);
-					}
-
-					float yOffset = Equations.ChangeFloat(easeTime, offsetWithTime.Offset, -offsetWithTime.Offset,
-						offsetWithTime.Duration, _gravityEaseType);
-					
-					_fields[columnId,rowId].SetDiceOffset(yOffset);
-				}
-
-
-				foreach (var removeAction in actionToRemove)
-				{
-					_fieldsInAction.Remove(removeAction);
-				}
-								
-				yield return null;
-				time += Time.deltaTime;
-			}											
+//			float time = 0.0f;
+//			List<SpawnDiceAction> actionToRemove = new List<SpawnDiceAction>();
+//			while (_fieldsInAction.Count > 0)
+//			{
+//				actionToRemove.Clear();
+//				foreach (var action in actions)
+//				{
+//					int columnId = action.Destination.x;
+//					int rowId = action.Destination.y;
+//
+//					OffsetWithTime offsetWithTime = yOffsetByColumn[columnId];
+//
+//					float easeTime = time;
+//					if (time > offsetWithTime.Duration)
+//					{
+//						easeTime = offsetWithTime.Duration;
+//						actionToRemove.Add(action);
+//					}
+//
+//					float yOffset = Equations.ChangeFloat(easeTime, offsetWithTime.Offset, -offsetWithTime.Offset,
+//						offsetWithTime.Duration, _gravityEaseType);
+//					
+//					_fields[columnId,rowId].SetDiceOffset(yOffset);
+//				}
+//
+//
+//				foreach (var removeAction in actionToRemove)
+//				{
+//					_fieldsInAction.Remove(removeAction);
+//				}
+//								
+//				yield return null;
+//				time += Time.deltaTime;
+//			}											
 		}
 
 		public void ShowWrongMove(Vector2Int from, Vector2Int to)
@@ -233,8 +230,7 @@ namespace Match3.Scene
 		
 		struct OffsetWithTime
 		{
-			public float Offset;
-			public float Duration;
+			public float Offset;			
 		}
 	}
 }

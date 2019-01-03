@@ -57,11 +57,22 @@ namespace Scene
             Dice = dice;
             dice.transform.SetParent(transform);
         }
-        
 
-        
-        
-        
+
+
+
+        public bool IsDiceGrounded
+        {
+            get
+            {
+                if (Dice == null)
+                {
+                    return false;
+                }
+
+                return (Dice.transform.localPosition == Vector3.zero);
+            }
+        }
         
         public void SetDiceOffset(float yOffset)
         {
