@@ -5,11 +5,8 @@ using Logic;
 using Logic.Actions;
 using Match3.Logic;
 using Match3.Logic.MatchFinder;
-using Match3.Scene;
-using UnityEditorInternal;
 using UnityEngine;
 using UnityEngine.Events;
-using Random = System.Random;
 
 
 namespace Match3.Scene
